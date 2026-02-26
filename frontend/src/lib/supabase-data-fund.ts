@@ -8,8 +8,12 @@
 
 import { supabase } from './supabase';
 import type {
-  FundTransaction, CreateFundTransactionInput, FundBalance,
-  Scholarship, CreateScholarshipInput, ScholarshipStatus,
+  FundTransaction,
+  CreateFundTransactionInput,
+  FundBalance,
+  Scholarship,
+  CreateScholarshipInput,
+  ScholarshipStatus,
 } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -51,18 +55,19 @@ export async function getFundBalance(): Promise<FundBalance> {
   return { income, expense, balance: income - expense };
 }
 
-export async function createFundTransaction(input: CreateFundTransactionInput): Promise<FundTransaction> {
-  const { data, error } = await supabase
-    .from('fund_transactions')
-    .insert(input)
-    .select()
-    .single();
+export async function createFundTransaction(
+  input: CreateFundTransactionInput
+): Promise<FundTransaction> {
+  const { data, error } = await supabase.from('fund_transactions').insert(input).select().single();
 
   if (error) throw error;
   return data;
 }
 
-export async function updateFundTransaction(id: string, input: Partial<CreateFundTransactionInput>): Promise<FundTransaction> {
+export async function updateFundTransaction(
+  id: string,
+  input: Partial<CreateFundTransactionInput>
+): Promise<FundTransaction> {
   const { data, error } = await supabase
     .from('fund_transactions')
     .update(input)
@@ -75,10 +80,7 @@ export async function updateFundTransaction(id: string, input: Partial<CreateFun
 }
 
 export async function deleteFundTransaction(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('fund_transactions')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('fund_transactions').delete().eq('id', id);
 
   if (error) throw error;
 }
@@ -88,10 +90,7 @@ export async function deleteFundTransaction(id: string): Promise<void> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export async function getScholarships(academicYear?: string): Promise<Scholarship[]> {
-  let query = supabase
-    .from('scholarships')
-    .select('*')
-    .order('created_at', { ascending: false });
+  let query = supabase.from('scholarships').select('*').order('created_at', { ascending: false });
 
   if (academicYear) {
     query = query.eq('academic_year', academicYear);
@@ -103,11 +102,7 @@ export async function getScholarships(academicYear?: string): Promise<Scholarshi
 }
 
 export async function getScholarship(id: string): Promise<Scholarship | null> {
-  const { data, error } = await supabase
-    .from('scholarships')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('scholarships').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') return null;
@@ -117,11 +112,7 @@ export async function getScholarship(id: string): Promise<Scholarship | null> {
 }
 
 export async function createScholarship(input: CreateScholarshipInput): Promise<Scholarship> {
-  const { data, error } = await supabase
-    .from('scholarships')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('scholarships').insert(input).select().single();
 
   if (error) throw error;
   return data;
@@ -150,10 +141,7 @@ export async function updateScholarshipStatus(
 }
 
 export async function deleteScholarship(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('scholarships')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('scholarships').delete().eq('id', id);
 
   if (error) throw error;
 }

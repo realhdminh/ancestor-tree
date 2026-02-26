@@ -9,20 +9,42 @@
 'use client';
 
 import { useState } from 'react';
-import { useClanArticles, useCreateClanArticle, useUpdateClanArticle, useDeleteClanArticle } from '@/hooks/use-clan-articles';
+import {
+  useClanArticles,
+  useCreateClanArticle,
+  useUpdateClanArticle,
+  useDeleteClanArticle,
+} from '@/hooks/use-clan-articles';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Plus, Pencil, Trash2, ScrollText, Star } from 'lucide-react';
 import { toast } from 'sonner';
@@ -76,10 +98,14 @@ function ArticleForm({
         <div>
           <Label>Danh mục</Label>
           <Select value={category} onValueChange={v => setCategory(v as ClanArticleCategory)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {CATEGORY_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -91,14 +117,19 @@ function ArticleForm({
       </div>
       <div>
         <Label>Nội dung *</Label>
-        <Textarea value={content} onChange={e => setContent(e.target.value)} rows={8} placeholder="Nội dung bài viết..." />
+        <Textarea
+          value={content}
+          onChange={e => setContent(e.target.value)}
+          rows={8}
+          placeholder="Nội dung bài viết..."
+        />
       </div>
       <div className="flex items-center gap-2">
         <Switch checked={isFeatured} onCheckedChange={setIsFeatured} />
         <Label>Nổi bật</Label>
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Đang lưu...' : (article ? 'Cập nhật' : 'Thêm mới')}
+        {isPending ? 'Đang lưu...' : article ? 'Cập nhật' : 'Thêm mới'}
       </Button>
     </form>
   );
@@ -122,8 +153,12 @@ export default function AdminCharterPage() {
       <div className="container mx-auto px-4 py-8">
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">Bạn cần quyền biên tập viên để truy cập trang này</p>
-            <Button asChild className="mt-4"><Link href="/">Về trang chủ</Link></Button>
+            <p className="text-muted-foreground">
+              Bạn cần quyền biên tập viên để truy cập trang này
+            </p>
+            <Button asChild className="mt-4">
+              <Link href="/">Về trang chủ</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -168,9 +203,18 @@ export default function AdminCharterPage() {
           <h1 className="text-2xl font-bold">Quản lý Hương ước</h1>
           <p className="text-muted-foreground">Thêm, sửa, xóa bài viết gia huấn và quy ước</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) setEditingItem(undefined); }}>
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={open => {
+            setDialogOpen(open);
+            if (!open) setEditingItem(undefined);
+          }}
+        >
           <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" />Thêm bài viết</Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Thêm bài viết
+            </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -187,7 +231,11 @@ export default function AdminCharterPage() {
       </div>
 
       <div className="flex gap-2">
-        <Button variant={filterCat === 'all' ? 'default' : 'outline'} size="sm" onClick={() => setFilterCat('all')}>
+        <Button
+          variant={filterCat === 'all' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilterCat('all')}
+        >
           Tất cả
         </Button>
         {CATEGORY_OPTIONS.map(opt => (
@@ -204,7 +252,11 @@ export default function AdminCharterPage() {
 
       {isLoading ? (
         <div className="space-y-2">
-          {[1, 2, 3].map(i => <Card key={i}><CardContent className="p-4 h-16" /></Card>)}
+          {[1, 2, 3].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4 h-16" />
+            </Card>
+          ))}
         </div>
       ) : !articles || articles.length === 0 ? (
         <Card>
@@ -223,29 +275,40 @@ export default function AdminCharterPage() {
                   <div className="min-w-0">
                     <p className="font-medium text-sm truncate">{a.title}</p>
                     <p className="text-xs text-muted-foreground">
-                      {CATEGORY_OPTIONS.find(c => c.value === a.category)?.label} · Thứ tự: {a.sort_order}
+                      {CATEGORY_OPTIONS.find(c => c.value === a.category)?.label} · Thứ tự:{' '}
+                      {a.sort_order}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                   <Button
-                    variant="ghost" size="icon"
-                    onClick={() => { setEditingItem(a); setDialogOpen(true); }}
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      setEditingItem(a);
+                      setDialogOpen(true);
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Xóa bài viết?</AlertDialogTitle>
-                        <AlertDialogDescription>Hành động này không thể hoàn tác.</AlertDialogDescription>
+                        <AlertDialogDescription>
+                          Hành động này không thể hoàn tác.
+                        </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Hủy</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(a.id)}>Xóa</AlertDialogAction>
+                        <AlertDialogAction onClick={() => handleDelete(a.id)}>
+                          Xóa
+                        </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

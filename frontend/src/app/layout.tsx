@@ -6,30 +6,39 @@
  * @updated 2026-02-25
  */
 
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { AuthProvider } from "@/components/auth/auth-provider";
-import { QueryProvider } from "@/components/providers/query-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { AuthProvider } from '@/components/auth/auth-provider';
+import { QueryProvider } from '@/components/providers/query-provider';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
+import { siteConfig } from '@/lib/site-config';
 
 const inter = Inter({
-  subsets: ["latin", "vietnamese"],
-  variable: "--font-inter",
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: 'Gia Phả Điện Tử - Họ Đặng làng Kỷ Các',
-    template: '%s | Gia Phả Họ Đặng',
+    default: siteConfig.fullTitle,
+    template: `%s | ${siteConfig.appTitle} ${siteConfig.clanName}`,
   },
-  description: 'Phần mềm quản lý gia phả điện tử cho Họ Đặng làng Kỷ Các. Lưu trữ thông tin dòng họ, cây gia phả, lịch giỗ chạp.',
-  keywords: ['gia phả', 'gia phả điện tử', 'Họ Đặng', 'làng Kỷ Các', 'dòng họ', 'cây gia phả', 'phả hệ'],
-  authors: [{ name: 'Họ Đặng làng Kỷ Các' }],
+  description: siteConfig.description,
+  keywords: [
+    'gia phả',
+    'gia phả điện tử',
+    siteConfig.clanName,
+    siteConfig.clanLocation,
+    'dòng họ',
+    'cây gia phả',
+    'phả hệ',
+  ],
+  authors: [{ name: `${siteConfig.clanName} ${siteConfig.clanLocation}` }],
   openGraph: {
-    title: 'Gia Phả Điện Tử - Họ Đặng làng Kỷ Các',
-    description: 'Gìn giữ tinh hoa - Tiếp bước cha ông',
+    title: siteConfig.fullTitle,
+    description: siteConfig.tagline,
     type: 'website',
     locale: 'vi_VN',
   },

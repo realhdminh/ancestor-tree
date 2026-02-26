@@ -18,10 +18,18 @@ import { getDatabase } from '../desktop-db/sqlite-db';
 
 /** Tables to export (profiles skipped — CTO Obs 3: UUID remapping issue) */
 const EXPORT_TABLES = [
-  'people', 'families', 'children',
-  'contributions', 'events', 'media',
-  'achievements', 'fund_transactions', 'scholarships', 'clan_articles',
-  'cau_duong_pools', 'cau_duong_assignments',
+  'people',
+  'families',
+  'children',
+  'contributions',
+  'events',
+  'media',
+  'achievements',
+  'fund_transactions',
+  'scholarships',
+  'clan_articles',
+  'cau_duong_pools',
+  'cau_duong_assignments',
 ] as const;
 
 type IncludeMedia = 'skip' | 'reference' | 'inline';
@@ -52,7 +60,9 @@ export async function POST(request: NextRequest) {
         const { columns, values } = result[0];
         exportedData[table] = values.map(row => {
           const obj: Record<string, unknown> = {};
-          columns.forEach((col, i) => { obj[col] = row[i]; });
+          columns.forEach((col, i) => {
+            obj[col] = row[i];
+          });
           return obj;
         });
       } else {
@@ -61,7 +71,10 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Media handling ─────────────────────────────────────────────────────
-    const mediaRoot = path.join(process.env.DESKTOP_DATA_DIR || path.join(os.homedir(), 'AncestorTree'), 'media');
+    const mediaRoot = path.join(
+      process.env.DESKTOP_DATA_DIR || path.join(os.homedir(), 'AncestorTree'),
+      'media'
+    );
 
     if (includeMedia === 'inline' && fs.existsSync(mediaRoot)) {
       // Embed all media files into ZIP under media/
@@ -72,7 +85,11 @@ export async function POST(request: NextRequest) {
           if (fs.statSync(full).isDirectory()) {
             walkDir(full, rel);
           } else {
-            zip.addLocalFile(full, path.dirname(rel) === '.' ? '' : path.dirname(rel), path.basename(rel));
+            zip.addLocalFile(
+              full,
+              path.dirname(rel) === '.' ? '' : path.dirname(rel),
+              path.basename(rel)
+            );
           }
         }
       };

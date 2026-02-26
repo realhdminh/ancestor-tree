@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/components/auth/auth-provider';
 import { toast } from 'sonner';
+import { siteConfig } from '@/lib/site-config';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       await signIn(email, password);
       toast.success('Đăng nhập thành công!');
@@ -34,16 +35,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 to-emerald-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-4">
             Đ
           </div>
           <CardTitle>Đăng nhập</CardTitle>
-          <CardDescription>
-            Đăng nhập vào Gia Phả Điện Tử - Họ Đặng làng Kỷ Các
-          </CardDescription>
+          <CardDescription>Đăng nhập vào {siteConfig.fullTitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,7 +53,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="email@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -65,7 +64,7 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
               />
             </div>

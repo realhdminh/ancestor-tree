@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { GitBranchPlus, Calendar, Users, ArrowRight } from 'lucide-react';
 import { StatsCard } from '@/components/home/stats-card';
 import { FeaturedCharter } from '@/components/home/featured-charter';
+import { siteConfig } from '@/lib/site-config';
 
 const features = [
   {
@@ -44,13 +45,13 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-emerald-800 to-emerald-950 text-white">
+      <section className="relative bg-linear-to-br from-emerald-800 to-emerald-950 text-white">
         <div className="container mx-auto px-4 py-16 md:py-24 text-center">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            Họ Đặng làng Kỷ Các
+            {siteConfig.clanName} {siteConfig.clanLocation}
           </h1>
           <p className="text-lg md:text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
-            &ldquo;Gìn giữ tinh hoa - Tiếp bước cha ông&rdquo;
+            &ldquo;{siteConfig.tagline}&rdquo;
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
@@ -59,7 +60,12 @@ export default function HomePage() {
                 Xem Gia Phả
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="bg-transparent border-white text-white hover:bg-white/10"
+            >
               <Link href="/people">
                 <Users className="mr-2 h-5 w-5" />
                 Danh sách thành viên
@@ -72,17 +78,23 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((feature) => (
+          {features.map(feature => (
             <Card key={feature.title} className="group hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4`}>
+                <div
+                  className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4`}
+                >
                   <feature.icon className={`h-6 w-6 ${feature.color}`} />
                 </div>
                 <CardTitle>{feature.title}</CardTitle>
                 <CardDescription>{feature.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="ghost" asChild className="group-hover:translate-x-1 transition-transform">
+                <Button
+                  variant="ghost"
+                  asChild
+                  className="group-hover:translate-x-1 transition-transform"
+                >
                   <Link href={feature.href}>
                     Xem ngay
                     <ArrowRight className="ml-2 h-4 w-4" />

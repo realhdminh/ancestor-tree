@@ -83,6 +83,7 @@ src/
 ## 📋 Features
 
 ### Sprint 1 (Current) ✅
+
 - [x] Project scaffolding
 - [x] Database schema
 - [x] Auth (login/register)
@@ -90,12 +91,14 @@ src/
 - [x] Homepage
 
 ### Sprint 2 (Coming)
+
 - [ ] People CRUD
 - [ ] Family relationships
 - [ ] Basic tree view
 - [ ] Search & filter
 
 ### Sprint 3+
+
 - [ ] Interactive tree
 - [ ] Admin panel
 - [ ] Memorial calendar
@@ -107,4 +110,4 @@ MIT - Open source for Vietnamese families
 
 ---
 
-*Gìn giữ tinh hoa - Tiếp bước cha ông*
+_Gìn giữ tinh hoa - Tiếp bước cha ông_

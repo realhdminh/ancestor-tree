@@ -7,13 +7,15 @@
  */
 
 import { supabase } from './supabase';
-import type { Achievement, AchievementCategory, CreateAchievementInput, UpdateAchievementInput } from '@/types';
+import type {
+  Achievement,
+  AchievementCategory,
+  CreateAchievementInput,
+  UpdateAchievementInput,
+} from '@/types';
 
 export async function getAchievements(category?: AchievementCategory): Promise<Achievement[]> {
-  let query = supabase
-    .from('achievements')
-    .select('*')
-    .order('year', { ascending: false });
+  let query = supabase.from('achievements').select('*').order('year', { ascending: false });
 
   if (category) {
     query = query.eq('category', category);
@@ -25,11 +27,7 @@ export async function getAchievements(category?: AchievementCategory): Promise<A
 }
 
 export async function getAchievement(id: string): Promise<Achievement | null> {
-  const { data, error } = await supabase
-    .from('achievements')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('achievements').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') return null;
@@ -62,17 +60,16 @@ export async function getFeaturedAchievements(): Promise<Achievement[]> {
 }
 
 export async function createAchievement(input: CreateAchievementInput): Promise<Achievement> {
-  const { data, error } = await supabase
-    .from('achievements')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('achievements').insert(input).select().single();
 
   if (error) throw error;
   return data;
 }
 
-export async function updateAchievement(id: string, input: UpdateAchievementInput): Promise<Achievement> {
+export async function updateAchievement(
+  id: string,
+  input: UpdateAchievementInput
+): Promise<Achievement> {
   const { data, error } = await supabase
     .from('achievements')
     .update({ ...input, updated_at: new Date().toISOString() })
@@ -85,10 +82,7 @@ export async function updateAchievement(id: string, input: UpdateAchievementInpu
 }
 
 export async function deleteAchievement(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('achievements')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('achievements').delete().eq('id', id);
 
   if (error) throw error;
 }

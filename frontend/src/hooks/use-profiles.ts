@@ -48,7 +48,7 @@ export function useProfile(userId: string | undefined) {
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ userId, input }: { userId: string; input: Partial<Profile> }) =>
       updateProfile(userId, input),

@@ -123,7 +123,8 @@ function applyMigrations(database: Database): void {
   for (const dir of migrationsDirs) {
     if (!fs.existsSync(dir)) continue;
 
-    const migrationFiles = fs.readdirSync(dir)
+    const migrationFiles = fs
+      .readdirSync(dir)
       .filter(f => f.endsWith('.sql'))
       .sort();
 

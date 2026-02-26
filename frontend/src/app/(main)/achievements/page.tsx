@@ -28,19 +28,27 @@ const CATEGORIES: { value: AchievementCategory | 'all'; label: string; icon: typ
 
 function getCategoryIcon(cat: AchievementCategory) {
   switch (cat) {
-    case 'hoc_tap': return <GraduationCap className="h-4 w-4" />;
-    case 'su_nghiep': return <Briefcase className="h-4 w-4" />;
-    case 'cong_hien': return <Heart className="h-4 w-4" />;
-    default: return <Trophy className="h-4 w-4" />;
+    case 'hoc_tap':
+      return <GraduationCap className="h-4 w-4" />;
+    case 'su_nghiep':
+      return <Briefcase className="h-4 w-4" />;
+    case 'cong_hien':
+      return <Heart className="h-4 w-4" />;
+    default:
+      return <Trophy className="h-4 w-4" />;
   }
 }
 
 function getCategoryLabel(cat: AchievementCategory) {
   switch (cat) {
-    case 'hoc_tap': return 'Học tập';
-    case 'su_nghiep': return 'Sự nghiệp';
-    case 'cong_hien': return 'Cống hiến';
-    default: return 'Khác';
+    case 'hoc_tap':
+      return 'Học tập';
+    case 'su_nghiep':
+      return 'Sự nghiệp';
+    case 'cong_hien':
+      return 'Cống hiến';
+    default:
+      return 'Khác';
   }
 }
 
@@ -61,23 +69,25 @@ function AchievementCard({ achievement, person }: { achievement: Achievement; pe
               </p>
             )}
             {achievement.description && (
-              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{achievement.description}</p>
+              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                {achievement.description}
+              </p>
             )}
             <div className="flex items-center gap-2 mt-2">
               <Badge variant="outline" className="text-xs">
                 {getCategoryLabel(achievement.category)}
               </Badge>
               {achievement.year && (
-                <Badge variant="secondary" className="text-xs">{achievement.year}</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {achievement.year}
+                </Badge>
               )}
               {achievement.awarded_by && (
                 <span className="text-xs text-muted-foreground">{achievement.awarded_by}</span>
               )}
             </div>
           </div>
-          {achievement.is_featured && (
-            <Star className="h-4 w-4 text-amber-500 shrink-0" />
-          )}
+          {achievement.is_featured && <Star className="h-4 w-4 text-amber-500 shrink-0" />}
         </div>
       </CardContent>
     </Card>
@@ -99,10 +109,7 @@ export default function AchievementsPage() {
     return map;
   }, [people]);
 
-  const featured = useMemo(
-    () => (achievements || []).filter(a => a.is_featured),
-    [achievements]
-  );
+  const featured = useMemo(() => (achievements || []).filter(a => a.is_featured), [achievements]);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return achievements || [];
@@ -137,7 +144,9 @@ export default function AchievementsPage() {
           <Trophy className="h-6 w-6" />
           Vinh danh con cháu
         </h1>
-        <p className="text-muted-foreground">Ghi nhận thành tích nổi bật của các thành viên trong dòng họ</p>
+        <p className="text-muted-foreground">
+          Ghi nhận thành tích nổi bật của các thành viên trong dòng họ
+        </p>
       </div>
 
       {/* Filters */}
@@ -187,9 +196,7 @@ export default function AchievementsPage() {
 
       {/* Full list */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">
-          Danh sách vinh danh ({filtered.length})
-        </h2>
+        <h2 className="text-lg font-semibold mb-3">Danh sách vinh danh ({filtered.length})</h2>
         {filtered.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">

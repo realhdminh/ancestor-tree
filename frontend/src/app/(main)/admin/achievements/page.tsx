@@ -9,21 +9,43 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useAchievements, useCreateAchievement, useUpdateAchievement, useDeleteAchievement } from '@/hooks/use-achievements';
+import {
+  useAchievements,
+  useCreateAchievement,
+  useUpdateAchievement,
+  useDeleteAchievement,
+} from '@/hooks/use-achievements';
 import { usePeople } from '@/hooks/use-people';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Plus, Pencil, Trash2, Trophy, Star } from 'lucide-react';
 import { toast } from 'sonner';
@@ -79,26 +101,38 @@ function AchievementForm({
       <div>
         <Label>Thành viên *</Label>
         <Select value={personId} onValueChange={setPersonId}>
-          <SelectTrigger><SelectValue placeholder="Chọn thành viên" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Chọn thành viên" />
+          </SelectTrigger>
           <SelectContent>
             {people.map(p => (
-              <SelectItem key={p.id} value={p.id}>{p.display_name} (Đời {p.generation})</SelectItem>
+              <SelectItem key={p.id} value={p.id}>
+                {p.display_name} (Đời {p.generation})
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
       <div>
         <Label>Tiêu đề *</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Thủ khoa Đại học Bách Khoa" />
+        <Input
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="Thủ khoa Đại học Bách Khoa"
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>Danh mục</Label>
           <Select value={category} onValueChange={v => setCategory(v as AchievementCategory)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {CATEGORY_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -110,7 +144,11 @@ function AchievementForm({
       </div>
       <div>
         <Label>Trao bởi</Label>
-        <Input value={awardedBy} onChange={e => setAwardedBy(e.target.value)} placeholder="Sở GD&ĐT Hà Tĩnh" />
+        <Input
+          value={awardedBy}
+          onChange={e => setAwardedBy(e.target.value)}
+          placeholder="Sở GD&ĐT Hà Tĩnh"
+        />
       </div>
       <div>
         <Label>Mô tả</Label>
@@ -121,7 +159,7 @@ function AchievementForm({
         <Label>Nổi bật (hiển thị trên trang chủ)</Label>
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Đang lưu...' : (achievement ? 'Cập nhật' : 'Thêm mới')}
+        {isPending ? 'Đang lưu...' : achievement ? 'Cập nhật' : 'Thêm mới'}
       </Button>
     </form>
   );
@@ -159,8 +197,12 @@ export default function AdminAchievementsPage() {
       <div className="container mx-auto px-4 py-8">
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">Bạn cần quyền biên tập viên để truy cập trang này</p>
-            <Button asChild className="mt-4"><Link href="/">Về trang chủ</Link></Button>
+            <p className="text-muted-foreground">
+              Bạn cần quyền biên tập viên để truy cập trang này
+            </p>
+            <Button asChild className="mt-4">
+              <Link href="/">Về trang chủ</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -205,9 +247,18 @@ export default function AdminAchievementsPage() {
           <h1 className="text-2xl font-bold">Quản lý Vinh danh</h1>
           <p className="text-muted-foreground">Thêm, sửa, xóa thành tích thành viên</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) setEditingItem(undefined); }}>
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={open => {
+            setDialogOpen(open);
+            if (!open) setEditingItem(undefined);
+          }}
+        >
           <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" />Thêm thành tích</Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Thêm thành tích
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -233,7 +284,11 @@ export default function AdminAchievementsPage() {
 
       {isLoading ? (
         <div className="space-y-2">
-          {[1, 2, 3].map(i => <Card key={i}><CardContent className="p-4 h-16" /></Card>)}
+          {[1, 2, 3].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4 h-16" />
+            </Card>
+          ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card>
@@ -254,30 +309,41 @@ export default function AdminAchievementsPage() {
                     <div className="min-w-0">
                       <p className="font-medium text-sm truncate">{a.title}</p>
                       <p className="text-xs text-muted-foreground">
-                        {person?.display_name || '?'} · {CATEGORY_OPTIONS.find(c => c.value === a.category)?.label}
+                        {person?.display_name || '?'} ·{' '}
+                        {CATEGORY_OPTIONS.find(c => c.value === a.category)?.label}
                         {a.year && ` · ${a.year}`}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Button
-                      variant="ghost" size="icon"
-                      onClick={() => { setEditingItem(a); setDialogOpen(true); }}
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setEditingItem(a);
+                        setDialogOpen(true);
+                      }}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Xóa thành tích?</AlertDialogTitle>
-                          <AlertDialogDescription>Hành động này không thể hoàn tác.</AlertDialogDescription>
+                          <AlertDialogDescription>
+                            Hành động này không thể hoàn tác.
+                          </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Hủy</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDelete(a.id)}>Xóa</AlertDialogAction>
+                          <AlertDialogAction onClick={() => handleDelete(a.id)}>
+                            Xóa
+                          </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

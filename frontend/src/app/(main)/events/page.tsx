@@ -13,7 +13,12 @@ import Link from 'next/link';
 import { useEvents, useDeleteEvent } from '@/hooks/use-events';
 import { usePeople } from '@/hooks/use-people';
 import { useAuth } from '@/components/auth/auth-provider';
-import { parseLunarString, getNextLunarOccurrence, formatLunarDate, solarToLunar } from '@/lib/lunar-calendar';
+import {
+  parseLunarString,
+  getNextLunarOccurrence,
+  formatLunarDate,
+  solarToLunar,
+} from '@/lib/lunar-calendar';
 import { CalendarGrid } from '@/components/events/calendar-grid';
 import { AddEventDialog } from '@/components/events/add-event-dialog';
 import { EVENT_TYPE_LABELS, MONTHS_VI } from '@/components/events/event-constants';
@@ -47,20 +52,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import {
-  Calendar,
-  Plus,
-  ChevronLeft,
-  ChevronRight,
-  Trash2,
-  AlertCircle,
-} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calendar, Plus, ChevronLeft, ChevronRight, Trash2, AlertCircle } from 'lucide-react';
 import type { Event, Person } from '@/types';
 import { toast } from 'sonner';
 
@@ -106,7 +99,11 @@ export default function EventsPage() {
         }
       } else if (event.event_date) {
         nextDate = new Date(event.event_date);
-        const lunar = solarToLunar(nextDate.getDate(), nextDate.getMonth() + 1, nextDate.getFullYear());
+        const lunar = solarToLunar(
+          nextDate.getDate(),
+          nextDate.getMonth() + 1,
+          nextDate.getFullYear()
+        );
         lunarDisplay = formatLunarDate(lunar.day, lunar.month);
       }
 
@@ -177,8 +174,14 @@ export default function EventsPage() {
   const navigateMonth = (dir: number) => {
     let m = calendarMonth + dir;
     let y = calendarYear;
-    if (m > 12) { m = 1; y++; }
-    if (m < 1) { m = 12; y--; }
+    if (m > 12) {
+      m = 1;
+      y++;
+    }
+    if (m < 1) {
+      m = 12;
+      y--;
+    }
     setCalendarMonth(m);
     setCalendarYear(y);
   };
@@ -217,9 +220,7 @@ export default function EventsPage() {
                 <DialogTitle>Thêm sự kiện mới</DialogTitle>
                 <DialogDescription>Thêm ngày giỗ, lễ tết hoặc sự kiện dòng họ</DialogDescription>
               </DialogHeader>
-              <AddEventDialog
-                onClose={() => setDialogOpen(false)}
-              />
+              <AddEventDialog onClose={() => setDialogOpen(false)} />
             </DialogContent>
           </Dialog>
         )}
@@ -236,39 +237,50 @@ export default function EventsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {allUpcoming.slice(0, 5).map(({ event, person, nextDate, daysUntil, lunarDisplay, isAuto }) => {
-                const typeInfo = EVENT_TYPE_LABELS[event.event_type];
-                const TypeIcon = typeInfo.icon;
-                return (
-                  <div key={event.id} className="flex items-center gap-3 bg-background rounded-lg p-3">
-                    <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${typeInfo.color}`}>
-                      <TypeIcon className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm">
-                        {event.title}
-                        {isAuto && <span className="text-xs text-muted-foreground ml-1">(tự động)</span>}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {nextDate.toLocaleDateString('vi-VN')} · {lunarDisplay}
-                        {person && (
-                          <>
-                            {' · '}
-                            <Link href={`/people/${person.id}`} className="hover:underline">
-                              {person.display_name}
-                            </Link>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <Badge
-                      variant={daysUntil <= 7 ? 'destructive' : daysUntil <= 30 ? 'default' : 'secondary'}
+              {allUpcoming
+                .slice(0, 5)
+                .map(({ event, person, nextDate, daysUntil, lunarDisplay, isAuto }) => {
+                  const typeInfo = EVENT_TYPE_LABELS[event.event_type];
+                  const TypeIcon = typeInfo.icon;
+                  return (
+                    <div
+                      key={event.id}
+                      className="flex items-center gap-3 bg-background rounded-lg p-3"
                     >
-                      {daysUntil === 0 ? 'Hôm nay' : `${daysUntil} ngày`}
-                    </Badge>
-                  </div>
-                );
-              })}
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-lg ${typeInfo.color}`}
+                      >
+                        <TypeIcon className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm">
+                          {event.title}
+                          {isAuto && (
+                            <span className="text-xs text-muted-foreground ml-1">(tự động)</span>
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {nextDate.toLocaleDateString('vi-VN')} · {lunarDisplay}
+                          {person && (
+                            <>
+                              {' · '}
+                              <Link href={`/people/${person.id}`} className="hover:underline">
+                                {person.display_name}
+                              </Link>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <Badge
+                        variant={
+                          daysUntil <= 7 ? 'destructive' : daysUntil <= 30 ? 'default' : 'secondary'
+                        }
+                      >
+                        {daysUntil === 0 ? 'Hôm nay' : `${daysUntil} ngày`}
+                      </Badge>
+                    </div>
+                  );
+                })}
             </div>
           </CardContent>
         </Card>
@@ -324,7 +336,9 @@ export default function EventsPage() {
                   <SelectContent>
                     <SelectItem value="all">Tất cả</SelectItem>
                     {Object.entries(EVENT_TYPE_LABELS).map(([key, { label }]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -338,21 +352,20 @@ export default function EventsPage() {
                   ))}
                 </div>
               ) : filteredEvents.length === 0 ? (
-                <div className="py-12 text-center text-muted-foreground">
-                  Chưa có sự kiện nào
-                </div>
+                <div className="py-12 text-center text-muted-foreground">Chưa có sự kiện nào</div>
               ) : (
                 <div className="space-y-3">
                   {filteredEvents.map(event => {
                     const typeInfo = EVENT_TYPE_LABELS[event.event_type];
                     const TypeIcon = typeInfo.icon;
-                    const person = event.person_id ? people?.find(p => p.id === event.person_id) : undefined;
+                    const person = event.person_id
+                      ? people?.find(p => p.id === event.person_id)
+                      : undefined;
                     return (
-                      <div
-                        key={event.id}
-                        className="flex items-center gap-3 rounded-lg border p-3"
-                      >
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg shrink-0 ${typeInfo.color}`}>
+                      <div key={event.id} className="flex items-center gap-3 rounded-lg border p-3">
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center rounded-lg shrink-0 ${typeInfo.color}`}
+                        >
                           <TypeIcon className="h-5 w-5" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -379,7 +392,9 @@ export default function EventsPage() {
                         <div className="flex items-center gap-2 shrink-0">
                           <Badge variant="outline">{typeInfo.label}</Badge>
                           {event.recurring && (
-                            <Badge variant="secondary" className="text-xs">Hàng năm</Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              Hàng năm
+                            </Badge>
                           )}
                           {isEditor && (
                             <AlertDialog>
@@ -396,7 +411,8 @@ export default function EventsPage() {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Xóa sự kiện</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Bạn có chắc muốn xóa &ldquo;{event.title}&rdquo;? Hành động này không thể hoàn tác.
+                                    Bạn có chắc muốn xóa &ldquo;{event.title}&rdquo;? Hành động này
+                                    không thể hoàn tác.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

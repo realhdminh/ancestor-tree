@@ -9,10 +9,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useCauDuongPools, useCauDuongAssignments, useEligibleMembers } from '@/hooks/use-cau-duong';
+import {
+  useCauDuongPools,
+  useCauDuongAssignments,
+  useEligibleMembers,
+} from '@/hooks/use-cau-duong';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Users, RotateCcw, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 import { CAU_DUONG_CEREMONY_LABELS, CAU_DUONG_CEREMONY_ORDER, type CauDuongStatus } from '@/types';
@@ -28,13 +38,14 @@ const STATUS_LABELS: Record<CauDuongStatus, string> = {
   cancelled: 'Đã hủy',
 };
 
-const STATUS_VARIANT: Record<CauDuongStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  scheduled: 'secondary',
-  completed: 'default',
-  delegated: 'outline',
-  rescheduled: 'outline',
-  cancelled: 'destructive',
-};
+const STATUS_VARIANT: Record<CauDuongStatus, 'default' | 'secondary' | 'destructive' | 'outline'> =
+  {
+    scheduled: 'secondary',
+    completed: 'default',
+    delegated: 'outline',
+    rescheduled: 'outline',
+    cancelled: 'destructive',
+  };
 
 export default function CauDuongPage() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -43,8 +54,14 @@ export default function CauDuongPage() {
   const firstPool = pools?.[0];
   const poolId = firstPool?.id;
 
-  const { data: assignments, isLoading: assignmentsLoading } = useCauDuongAssignments(poolId, selectedYear);
-  const { data: eligibleMembers, isLoading: eligibleLoading } = useEligibleMembers(poolId, currentYear);
+  const { data: assignments, isLoading: assignmentsLoading } = useCauDuongAssignments(
+    poolId,
+    selectedYear
+  );
+  const { data: eligibleMembers, isLoading: eligibleLoading } = useEligibleMembers(
+    poolId,
+    currentYear
+  );
 
   if (poolsLoading) {
     return (
@@ -90,7 +107,9 @@ export default function CauDuongPage() {
           </SelectTrigger>
           <SelectContent>
             {YEAR_OPTIONS.map(y => (
-              <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>
+              <SelectItem key={y} value={y.toString()}>
+                Năm {y}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -103,7 +122,8 @@ export default function CauDuongPage() {
             <span className="font-medium">{firstPool.name}</span>
             <span className="text-muted-foreground hidden sm:inline">•</span>
             <span className="text-muted-foreground">
-              Đời {firstPool.min_generation} trở xuống • Dưới {firstPool.max_age_lunar} tuổi âm • Nam giới đã lập gia đình
+              Đời {firstPool.min_generation} trở xuống • Dưới {firstPool.max_age_lunar} tuổi âm •
+              Nam giới đã lập gia đình
             </span>
           </CardContent>
         </Card>
@@ -148,30 +168,49 @@ export default function CauDuongPage() {
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold">{CAU_DUONG_CEREMONY_LABELS[ceremonyType]}</p>
+                            <p className="font-semibold">
+                              {CAU_DUONG_CEREMONY_LABELS[ceremonyType]}
+                            </p>
                             {assignment ? (
                               <div className="mt-1 text-sm text-muted-foreground space-y-0.5">
                                 <p>
                                   <span className="font-medium text-foreground">
                                     {assignment.host_person?.display_name ?? '—'}
                                   </span>
-                                  {assignment.actual_host_person && assignment.actual_host_person.id !== assignment.host_person?.id && (
-                                    <span className="ml-2 text-xs">
-                                      (Ủy quyền: <span className="font-medium">{assignment.actual_host_person.display_name}</span>)
-                                    </span>
-                                  )}
+                                  {assignment.actual_host_person &&
+                                    assignment.actual_host_person.id !==
+                                      assignment.host_person?.id && (
+                                      <span className="ml-2 text-xs">
+                                        (Ủy quyền:{' '}
+                                        <span className="font-medium">
+                                          {assignment.actual_host_person.display_name}
+                                        </span>
+                                        )
+                                      </span>
+                                    )}
                                 </p>
                                 {assignment.reason && (
                                   <p className="text-xs italic">{assignment.reason}</p>
                                 )}
                                 {assignment.scheduled_date && (
-                                  <p className="text-xs">Dự kiến: {new Date(assignment.scheduled_date).toLocaleDateString('vi-VN')}</p>
+                                  <p className="text-xs">
+                                    Dự kiến:{' '}
+                                    {new Date(assignment.scheduled_date).toLocaleDateString(
+                                      'vi-VN'
+                                    )}
+                                  </p>
                                 )}
-                                {assignment.actual_date && assignment.actual_date !== assignment.scheduled_date && (
-                                  <p className="text-xs text-orange-600">Thực hiện: {new Date(assignment.actual_date).toLocaleDateString('vi-VN')}</p>
-                                )}
+                                {assignment.actual_date &&
+                                  assignment.actual_date !== assignment.scheduled_date && (
+                                    <p className="text-xs text-orange-600">
+                                      Thực hiện:{' '}
+                                      {new Date(assignment.actual_date).toLocaleDateString('vi-VN')}
+                                    </p>
+                                  )}
                                 {assignment.notes && (
-                                  <p className="text-xs text-muted-foreground">{assignment.notes}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {assignment.notes}
+                                  </p>
                                 )}
                               </div>
                             ) : (
@@ -181,7 +220,10 @@ export default function CauDuongPage() {
                         </div>
 
                         {assignment && (
-                          <Badge variant={STATUS_VARIANT[assignment.status]} className="self-start sm:self-center">
+                          <Badge
+                            variant={STATUS_VARIANT[assignment.status]}
+                            className="self-start sm:self-center"
+                          >
                             {STATUS_LABELS[assignment.status]}
                           </Badge>
                         )}
@@ -200,7 +242,8 @@ export default function CauDuongPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Danh sách xoay vòng</CardTitle>
               <CardDescription>
-                Thứ tự theo cây gia phả (DFS preorder) — đời trên trước, trong mỗi đời theo thứ tự gia đình
+                Thứ tự theo cây gia phả (DFS preorder) — đời trên trước, trong mỗi đời theo thứ tự
+                gia đình
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -237,7 +280,9 @@ export default function CauDuongPage() {
                       <div className="text-right text-xs text-muted-foreground">
                         {member.ageLunar > 0 && <span>{member.ageLunar} tuổi âm</span>}
                         {member.person.birth_year && (
-                          <p className="text-muted-foreground/60">sinh {member.person.birth_year}</p>
+                          <p className="text-muted-foreground/60">
+                            sinh {member.person.birth_year}
+                          </p>
                         )}
                       </div>
                     </div>

@@ -8,13 +8,23 @@
  */
 
 import type { Database } from 'sql.js';
-import { coerceRowFromSqlite, coerceDataToSqlite, generateUUID, isBooleanColumn } from './type-coerce';
+import {
+  coerceRowFromSqlite,
+  coerceDataToSqlite,
+  generateUUID,
+  isBooleanColumn,
+} from './type-coerce';
 import { notFoundError, sqliteError } from './error-mapper';
 
 /** Tables that have an updated_at column (from schema inspection) */
 const TABLES_WITH_UPDATED_AT = new Set([
-  'people', 'families', 'profiles', 'achievements',
-  'clan_articles', 'cau_duong_pools', 'cau_duong_assignments',
+  'people',
+  'families',
+  'profiles',
+  'achievements',
+  'clan_articles',
+  'cau_duong_pools',
+  'cau_duong_assignments',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -178,9 +188,7 @@ function executeSelect(db: Database, payload: QueryPayload): QueryResult {
 
   // ORDER BY
   if (payload.order && payload.order.length > 0) {
-    const orderParts = payload.order.map(
-      o => `"${o.column}" ${o.ascending ? 'ASC' : 'DESC'}`
-    );
+    const orderParts = payload.order.map(o => `"${o.column}" ${o.ascending ? 'ASC' : 'DESC'}`);
     sql += ` ORDER BY ${orderParts.join(', ')}`;
   }
 
@@ -264,7 +272,7 @@ function executeInsert(db: Database, payload: QueryPayload): QueryResult {
 }
 
 function executeUpdate(db: Database, payload: QueryPayload): QueryResult {
-  const rawBody = Array.isArray(payload.body) ? payload.body[0] : (payload.body || {});
+  const rawBody = Array.isArray(payload.body) ? payload.body[0] : payload.body || {};
   const data = coerceDataToSqlite(payload.table, rawBody);
 
   // Auto-update timestamp (only for tables that have the column)

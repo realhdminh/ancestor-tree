@@ -23,12 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Plus, Search, UserPlus } from 'lucide-react';
 import type { Person, PersonRelations } from '@/types';
@@ -43,9 +38,7 @@ function PersonLink({ person }: { person: Person }) {
     >
       <div
         className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium ${
-          person.gender === 1
-            ? 'bg-blue-100 text-blue-700'
-            : 'bg-pink-100 text-pink-700'
+          person.gender === 1 ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
         }`}
       >
         {person.display_name.slice(-1)}
@@ -107,7 +100,7 @@ function QuickPersonForm({
           id="qf-name"
           placeholder="Nguyễn Văn A"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           required
         />
       </div>
@@ -146,7 +139,7 @@ function QuickPersonForm({
             placeholder="1980"
             type="number"
             value={birthYear}
-            onChange={(e) => setBirthYear(e.target.value)}
+            onChange={e => setBirthYear(e.target.value)}
           />
         </div>
       </div>
@@ -158,7 +151,7 @@ function QuickPersonForm({
           min={1}
           max={20}
           value={generation}
-          onChange={(e) => setGeneration(Number(e.target.value))}
+          onChange={e => setGeneration(Number(e.target.value))}
         />
       </div>
       <Button type="submit" className="w-full" disabled={isLoading || !name.trim()}>
@@ -180,7 +173,7 @@ function PersonSearchSelect({ excludeIds = [], onSelect, isLoading }: PersonSear
   const [query, setQuery] = useState('');
   const { data: results, isFetching } = useSearchPeople(query);
 
-  const filtered = (results || []).filter((p) => !excludeIds.includes(p.id));
+  const filtered = (results || []).filter(p => !excludeIds.includes(p.id));
 
   return (
     <div className="space-y-3">
@@ -189,7 +182,7 @@ function PersonSearchSelect({ excludeIds = [], onSelect, isLoading }: PersonSear
         <Input
           placeholder="Tìm theo tên... (nhập ít nhất 2 ký tự)"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={e => setQuery(e.target.value)}
           className="pl-9"
         />
       </div>
@@ -198,7 +191,7 @@ function PersonSearchSelect({ excludeIds = [], onSelect, isLoading }: PersonSear
         <p className="text-sm text-muted-foreground">Không tìm thấy kết quả</p>
       )}
       <div className="space-y-1 max-h-48 overflow-y-auto">
-        {filtered.map((person) => (
+        {filtered.map(person => (
           <button
             key={person.id}
             type="button"
@@ -216,7 +209,8 @@ function PersonSearchSelect({ excludeIds = [], onSelect, isLoading }: PersonSear
             <div>
               <p className="text-sm font-medium">{person.display_name}</p>
               <p className="text-xs text-muted-foreground">
-                Đời {person.generation}{person.birth_year ? ` · ${person.birth_year}` : ''}
+                Đời {person.generation}
+                {person.birth_year ? ` · ${person.birth_year}` : ''}
               </p>
             </div>
           </button>
@@ -253,15 +247,15 @@ function AddRelationDialog({
   const createSpouseFamilyMutation = useCreateSpouseFamily();
   const addChildMutation = useAddChildToFamilyMutation(currentPerson.id);
 
-  const defaultGender: 1 | 2 = mode === 'spouse'
-    ? (currentPerson.gender === 1 ? 2 : 1)
-    : 1;
-  const defaultGeneration = mode === 'spouse'
-    ? currentPerson.generation
-    : currentPerson.generation + 1;
+  const defaultGender: 1 | 2 = mode === 'spouse' ? (currentPerson.gender === 1 ? 2 : 1) : 1;
+  const defaultGeneration =
+    mode === 'spouse' ? currentPerson.generation : currentPerson.generation + 1;
 
   const generateHandle = (name: string) => {
-    return `${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${Date.now()}`;
+    return `${name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')}-${Date.now()}`;
   };
 
   const handleCreateNew = async (data: QuickPersonData) => {
@@ -333,18 +327,19 @@ function AddRelationDialog({
     }
   };
 
-  const title = mode === 'spouse'
-    ? `Thêm ${currentPerson.gender === 1 ? 'vợ' : 'chồng'} cho ${currentPerson.display_name}`
-    : `Thêm con cho ${currentPerson.display_name}`;
+  const title =
+    mode === 'spouse'
+      ? `Thêm ${currentPerson.gender === 1 ? 'vợ' : 'chồng'} cho ${currentPerson.display_name}`
+      : `Thêm con cho ${currentPerson.display_name}`;
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog open={open} onOpenChange={v => !v && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as 'new' | 'existing')}>
+        <Tabs value={tab} onValueChange={v => setTab(v as 'new' | 'existing')}>
           <TabsList className="w-full">
             <TabsTrigger value="new" className="flex-1">
               <UserPlus className="h-4 w-4 mr-2" />
@@ -407,9 +402,7 @@ function OwnFamilySection({
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
           {spouseLabel}
           {family.marriage_date && (
-            <span className="ml-2 normal-case font-normal">
-              (kết hôn {family.marriage_date})
-            </span>
+            <span className="ml-2 normal-case font-normal">(kết hôn {family.marriage_date})</span>
           )}
         </p>
         {spouse ? (
@@ -439,7 +432,7 @@ function OwnFamilySection({
         </div>
         {children.length > 0 ? (
           <div className="space-y-0.5">
-            {children.map((child) => (
+            {children.map(child => (
               <PersonLink key={child.id} person={child} />
             ))}
           </div>
@@ -549,7 +542,7 @@ export function FamilyRelationsCard({ person, canEdit }: FamilyRelationsCardProp
                     Anh/Chị/Em ({parentFamily.siblings.length})
                   </p>
                   <div className="space-y-0.5">
-                    {parentFamily.siblings.map((sib) => (
+                    {parentFamily.siblings.map(sib => (
                       <PersonLink key={sib.id} person={sib} />
                     ))}
                   </div>
@@ -561,9 +554,7 @@ export function FamilyRelationsCard({ person, canEdit }: FamilyRelationsCardProp
           )}
 
           {!parentFamily && (
-            <div className="text-sm text-muted-foreground">
-              Chưa có thông tin cha/mẹ
-            </div>
+            <div className="text-sm text-muted-foreground">Chưa có thông tin cha/mẹ</div>
           )}
 
           {/* Own families (spouse + children) */}

@@ -18,8 +18,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import {
-  BookOpen, Wallet, ArrowDownCircle, ArrowUpCircle,
-  GraduationCap, Award, Printer, Download,
+  BookOpen,
+  Wallet,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  GraduationCap,
+  Award,
+  Printer,
+  Download,
 } from 'lucide-react';
 import { formatVND } from '@/lib/format';
 import type { Person, FundTransaction, Scholarship, ScholarshipStatus, FundBalance } from '@/types';
@@ -28,7 +34,7 @@ function exportFundReport(
   balance: FundBalance | undefined,
   transactions: FundTransaction[],
   scholarships: Scholarship[],
-  peopleMap: Map<string, Person>,
+  peopleMap: Map<string, Person>
 ) {
   const lines: string[] = [];
   lines.push('BÁO CÁO QUỸ KHUYẾN HỌC - CHI TỘC ĐẶNG ĐÌNH');
@@ -44,8 +50,11 @@ function exportFundReport(
   for (const s of scholarships) {
     const name = peopleMap.get(s.person_id)?.display_name || 'Không rõ';
     const type = s.type === 'hoc_bong' ? 'Học bổng' : 'Khen thưởng';
-    const status = s.status === 'paid' ? 'Đã cấp' : s.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt';
-    lines.push(`"${name}","${type}",${s.amount},"${s.academic_year}","${s.school || ''}","${s.grade_level || ''}","${status}"`);
+    const status =
+      s.status === 'paid' ? 'Đã cấp' : s.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt';
+    lines.push(
+      `"${name}","${type}",${s.amount},"${s.academic_year}","${s.school || ''}","${s.grade_level || ''}","${status}"`
+    );
   }
   lines.push('');
   lines.push('=== LỊCH SỬ GIAO DỊCH ===');
@@ -68,10 +77,22 @@ function exportFundReport(
 
 function getStatusBadge(status: ScholarshipStatus) {
   switch (status) {
-    case 'pending': return <Badge variant="outline" className="text-xs">Chờ duyệt</Badge>;
-    case 'approved': return <Badge className="bg-blue-100 text-blue-800 text-xs">Đã duyệt</Badge>;
-    case 'paid': return <Badge className="bg-green-100 text-green-800 text-xs">Đã cấp</Badge>;
-    default: return <Badge variant="outline" className="text-xs">{status}</Badge>;
+    case 'pending':
+      return (
+        <Badge variant="outline" className="text-xs">
+          Chờ duyệt
+        </Badge>
+      );
+    case 'approved':
+      return <Badge className="bg-blue-100 text-blue-800 text-xs">Đã duyệt</Badge>;
+    case 'paid':
+      return <Badge className="bg-green-100 text-green-800 text-xs">Đã cấp</Badge>;
+    default:
+      return (
+        <Badge variant="outline" className="text-xs">
+          {status}
+        </Badge>
+      );
   }
 }
 
@@ -133,7 +154,9 @@ export default function FundPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => exportFundReport(balance, transactions || [], scholarships || [], peopleMap)}
+            onClick={() =>
+              exportFundReport(balance, transactions || [], scholarships || [], peopleMap)
+            }
           >
             <Download className="h-4 w-4 mr-2" />
             Xuất CSV
@@ -203,12 +226,17 @@ export default function FundPage() {
                     <Card key={s.id}>
                       <CardContent className="p-3 flex items-center justify-between">
                         <div>
-                          <p className="font-medium text-sm">{person?.display_name || 'Không rõ'}</p>
+                          <p className="font-medium text-sm">
+                            {person?.display_name || 'Không rõ'}
+                          </p>
                           <p className="text-xs text-muted-foreground">
-                            {s.school && `${s.school} · `}{s.grade_level && `${s.grade_level} · `}
+                            {s.school && `${s.school} · `}
+                            {s.grade_level && `${s.grade_level} · `}
                             {s.academic_year}
                           </p>
-                          {s.reason && <p className="text-xs text-muted-foreground mt-0.5">{s.reason}</p>}
+                          {s.reason && (
+                            <p className="text-xs text-muted-foreground mt-0.5">{s.reason}</p>
+                          )}
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-sm">{formatVND(s.amount)}</p>
@@ -240,12 +268,17 @@ export default function FundPage() {
                     <Card key={s.id}>
                       <CardContent className="p-3 flex items-center justify-between">
                         <div>
-                          <p className="font-medium text-sm">{person?.display_name || 'Không rõ'}</p>
+                          <p className="font-medium text-sm">
+                            {person?.display_name || 'Không rõ'}
+                          </p>
                           <p className="text-xs text-muted-foreground">
-                            {s.school && `${s.school} · `}{s.grade_level && `${s.grade_level} · `}
+                            {s.school && `${s.school} · `}
+                            {s.grade_level && `${s.grade_level} · `}
                             {s.academic_year}
                           </p>
-                          {s.reason && <p className="text-xs text-muted-foreground mt-0.5">{s.reason}</p>}
+                          {s.reason && (
+                            <p className="text-xs text-muted-foreground mt-0.5">{s.reason}</p>
+                          )}
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-sm">{formatVND(s.amount)}</p>
@@ -277,13 +310,17 @@ export default function FundPage() {
                   <Card key={tx.id}>
                     <CardContent className="p-3 flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-sm">{tx.donor_name || person?.display_name || 'Ẩn danh'}</p>
+                        <p className="font-medium text-sm">
+                          {tx.donor_name || person?.display_name || 'Ẩn danh'}
+                        </p>
                         {tx.description && (
                           <p className="text-xs text-muted-foreground">{tx.description}</p>
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-sm text-emerald-600">+{formatVND(tx.amount)}</p>
+                        <p className="font-semibold text-sm text-emerald-600">
+                          +{formatVND(tx.amount)}
+                        </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(tx.transaction_date).toLocaleDateString('vi-VN')}
                         </p>
@@ -298,7 +335,9 @@ export default function FundPage() {
 
         {/* History */}
         <TabsContent value="history" className="mt-4">
-          <h3 className="text-base font-semibold mb-3">Lịch sử giao dịch ({(transactions || []).length})</h3>
+          <h3 className="text-base font-semibold mb-3">
+            Lịch sử giao dịch ({(transactions || []).length})
+          </h3>
           {!transactions || transactions.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
@@ -318,7 +357,9 @@ export default function FundPage() {
                       )}
                       <div>
                         <p className="font-medium text-sm">
-                          {tx.donor_name || tx.description || (tx.type === 'income' ? 'Thu' : 'Chi')}
+                          {tx.donor_name ||
+                            tx.description ||
+                            (tx.type === 'income' ? 'Thu' : 'Chi')}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(tx.transaction_date).toLocaleDateString('vi-VN')}
@@ -326,8 +367,11 @@ export default function FundPage() {
                         </p>
                       </div>
                     </div>
-                    <p className={`font-semibold text-sm ${tx.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
-                      {tx.type === 'income' ? '+' : '-'}{formatVND(tx.amount)}
+                    <p
+                      className={`font-semibold text-sm ${tx.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}
+                    >
+                      {tx.type === 'income' ? '+' : '-'}
+                      {formatVND(tx.amount)}
                     </p>
                   </CardContent>
                 </Card>

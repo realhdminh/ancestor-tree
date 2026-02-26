@@ -26,9 +26,7 @@ export function StatsCard() {
             {isLoading ? (
               <Skeleton className="h-9 w-16 mx-auto mb-1" />
             ) : (
-              <div className="text-3xl font-bold text-emerald-600">
-                {stats?.totalPeople || 0}
-              </div>
+              <div className="text-3xl font-bold text-emerald-600">{stats?.totalPeople || 0}</div>
             )}
             <div className="text-sm text-muted-foreground">Thành viên</div>
           </div>
@@ -46,9 +44,7 @@ export function StatsCard() {
             {isLoading ? (
               <Skeleton className="h-9 w-12 mx-auto mb-1" />
             ) : (
-              <div className="text-3xl font-bold text-emerald-600">
-                {stats?.totalChi || 0}
-              </div>
+              <div className="text-3xl font-bold text-emerald-600">{stats?.totalChi || 0}</div>
             )}
             <div className="text-sm text-muted-foreground">Chi/Nhánh</div>
           </div>
@@ -56,9 +52,7 @@ export function StatsCard() {
             {isLoading ? (
               <Skeleton className="h-9 w-12 mx-auto mb-1" />
             ) : (
-              <div className="text-3xl font-bold text-amber-600">
-                {stats?.livingCount || 0}
-              </div>
+              <div className="text-3xl font-bold text-amber-600">{stats?.livingCount || 0}</div>
             )}
             <div className="text-sm text-muted-foreground">Còn sống</div>
           </div>

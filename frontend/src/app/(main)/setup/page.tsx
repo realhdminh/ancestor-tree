@@ -61,7 +61,6 @@ export default function SetupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-
         {/* Step: Welcome */}
         {step === 'welcome' && (
           <div className="text-center space-y-6">
@@ -95,12 +94,7 @@ export default function SetupPage() {
             <div className="grid gap-3">
               {/* Import option */}
               <label className="relative cursor-pointer group">
-                <input
-                  type="file"
-                  accept=".zip"
-                  className="sr-only"
-                  onChange={handleFileChange}
-                />
+                <input type="file" accept=".zip" className="sr-only" onChange={handleFileChange} />
                 <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all">
                   <div className="mt-0.5 w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
                     <Upload className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -108,7 +102,9 @@ export default function SetupPage() {
                   <div>
                     <p className="font-semibold">Nhập từ file backup</p>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      Khôi phục dữ liệu từ file <code className="text-xs bg-muted px-1 py-0.5 rounded">.zip</code> đã xuất trước đó.
+                      Khôi phục dữ liệu từ file{' '}
+                      <code className="text-xs bg-muted px-1 py-0.5 rounded">.zip</code> đã xuất
+                      trước đó.
                     </p>
                   </div>
                 </div>
@@ -156,7 +152,11 @@ export default function SetupPage() {
               <h2 className="text-2xl font-bold">Sẵn sàng!</h2>
               {importResult ? (
                 <p className="text-muted-foreground">
-                  Đã nhập <span className="font-semibold text-foreground">{importResult.total_inserted}</span> bản ghi thành công.
+                  Đã nhập{' '}
+                  <span className="font-semibold text-foreground">
+                    {importResult.total_inserted}
+                  </span>{' '}
+                  bản ghi thành công.
                 </p>
               ) : (
                 <p className="text-muted-foreground">
@@ -169,7 +169,6 @@ export default function SetupPage() {
             </Button>
           </div>
         )}
-
       </div>
     </div>
   );

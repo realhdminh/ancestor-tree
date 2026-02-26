@@ -44,7 +44,9 @@ export default function ImportExportPage() {
       const url = URL.createObjectURL(blob);
       const filename = `giapha-${new Date().toISOString().slice(0, 10)}.zip`;
       const a = document.createElement('a');
-      a.href = url; a.download = filename; a.click();
+      a.href = url;
+      a.download = filename;
+      a.click();
       URL.revokeObjectURL(url);
       toast.success('Xuất dữ liệu thành công!');
     } catch (err) {
@@ -55,7 +57,12 @@ export default function ImportExportPage() {
   };
 
   const handleImport = async (file: File) => {
-    if (!window.confirm(`Xác nhận nhập dữ liệu từ "${file.name}"?\n\nTOÀN BỘ dữ liệu hiện tại sẽ bị xóa và thay thế.`)) return;
+    if (
+      !window.confirm(
+        `Xác nhận nhập dữ liệu từ "${file.name}"?\n\nTOÀN BỘ dữ liệu hiện tại sẽ bị xóa và thay thế.`
+      )
+    )
+      return;
     setImporting(true);
     setImportResult(null);
     try {
@@ -99,11 +106,13 @@ export default function ImportExportPage() {
         <div className="space-y-2">
           <p className="text-sm font-medium">Tuỳ chọn media:</p>
           <div className="grid grid-cols-3 gap-2">
-            {([
-              ['skip', 'Bỏ qua', 'Chỉ dữ liệu, không có ảnh'],
-              ['reference', 'Tham chiếu', 'Lưu đường dẫn ảnh (mặc định)'],
-              ['inline', 'Nhúng ảnh', 'Đính kèm toàn bộ ảnh vào ZIP'],
-            ] as [IncludeMedia, string, string][]).map(([val, label, desc]) => (
+            {(
+              [
+                ['skip', 'Bỏ qua', 'Chỉ dữ liệu, không có ảnh'],
+                ['reference', 'Tham chiếu', 'Lưu đường dẫn ảnh (mặc định)'],
+                ['inline', 'Nhúng ảnh', 'Đính kèm toàn bộ ảnh vào ZIP'],
+              ] as [IncludeMedia, string, string][]
+            ).map(([val, label, desc]) => (
               <button
                 key={val}
                 onClick={() => setIncludeMedia(val)}
@@ -140,7 +149,9 @@ export default function ImportExportPage() {
 
         <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 text-sm">
           <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-          <span>Toàn bộ dữ liệu hiện tại sẽ bị <strong>xóa</strong> và thay thế bằng dữ liệu trong file.</span>
+          <span>
+            Toàn bộ dữ liệu hiện tại sẽ bị <strong>xóa</strong> và thay thế bằng dữ liệu trong file.
+          </span>
         </div>
 
         <label className="block">
@@ -148,7 +159,11 @@ export default function ImportExportPage() {
             type="file"
             accept=".zip"
             className="sr-only"
-            onChange={e => { const f = e.target.files?.[0]; if (f) handleImport(f); e.target.value = ''; }}
+            onChange={e => {
+              const f = e.target.files?.[0];
+              if (f) handleImport(f);
+              e.target.value = '';
+            }}
             disabled={importing}
           />
           <Button asChild variant="outline" disabled={importing} className="w-full cursor-pointer">
@@ -163,7 +178,8 @@ export default function ImportExportPage() {
         {importResult && (
           <div className="rounded-lg border p-4 space-y-2">
             <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
-              <CheckCircle2 className="w-4 h-4" /> Nhập thành công — {importResult.total_inserted} bản ghi
+              <CheckCircle2 className="w-4 h-4" /> Nhập thành công — {importResult.total_inserted}{' '}
+              bản ghi
             </div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground">
               {Object.entries(importResult.tables).map(([table, count]) => (
@@ -176,7 +192,9 @@ export default function ImportExportPage() {
             {importResult.errors && importResult.errors.length > 0 && (
               <div className="text-xs text-amber-600 dark:text-amber-400 mt-2">
                 <p className="font-medium">Cảnh báo:</p>
-                {importResult.errors.slice(0, 3).map((e, i) => <p key={i}>{e}</p>)}
+                {importResult.errors.slice(0, 3).map((e, i) => (
+                  <p key={i}>{e}</p>
+                ))}
               </div>
             )}
           </div>

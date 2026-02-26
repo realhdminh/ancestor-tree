@@ -11,27 +11,27 @@ export interface Person {
   first_name?: string;
   middle_name?: string;
   surname?: string;
-  pen_name?: string;    // Tên tự (courtesy name)
-  taboo_name?: string;  // Tên húy (taboo name)
+  pen_name?: string; // Tên tự (courtesy name)
+  taboo_name?: string; // Tên húy (taboo name)
   gender: 1 | 2; // 1=Male, 2=Female
   generation: number;
   chi?: number;
-  
+
   // Birth
   birth_date?: string;
   birth_year?: number;
   birth_place?: string;
-  
+
   // Death
   death_date?: string;
   death_year?: number;
   death_place?: string;
   death_lunar?: string; // "15/7" format
-  
+
   // Status
   is_living: boolean;
   is_patrilineal: boolean;
-  
+
   // Contact
   phone?: string;
   email?: string;
@@ -39,16 +39,16 @@ export interface Person {
   facebook?: string;
   address?: string;
   hometown?: string;
-  
+
   // Bio
   occupation?: string;
   biography?: string;
   notes?: string;
   avatar_url?: string;
-  
+
   // Privacy: 0=public, 1=members only, 2=private
   privacy_level: number;
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
@@ -264,7 +264,10 @@ export interface Scholarship {
   created_at: string;
 }
 
-export type CreateScholarshipInput = Omit<Scholarship, 'id' | 'approved_by' | 'approved_at' | 'created_at'>;
+export type CreateScholarshipInput = Omit<
+  Scholarship,
+  'id' | 'approved_by' | 'approved_at' | 'created_at'
+>;
 
 // ─── Clan Article (Hương ước) ─────────────────────────────────────────────────
 
@@ -292,7 +295,7 @@ export interface CauDuongPool {
   name: string;
   ancestor_id: string;
   min_generation: number;
-  max_age_lunar: number;   // Tuổi âm tối đa (mặc định 70)
+  max_age_lunar: number; // Tuổi âm tối đa (mặc định 70)
   description?: string;
   is_active: boolean;
   created_at: string;
@@ -310,7 +313,10 @@ export const CAU_DUONG_CEREMONY_LABELS: Record<CauDuongCeremonyType, string> = {
 };
 
 export const CAU_DUONG_CEREMONY_ORDER: CauDuongCeremonyType[] = [
-  'tet', 'ram_thang_gieng', 'gio_to', 'ram_thang_bay',
+  'tet',
+  'ram_thang_gieng',
+  'gio_to',
+  'ram_thang_bay',
 ];
 
 export interface CauDuongAssignment {
@@ -318,14 +324,14 @@ export interface CauDuongAssignment {
   pool_id: string;
   year: number;
   ceremony_type: CauDuongCeremonyType;
-  host_person_id?: string;          // Người được phân công
-  actual_host_person_id?: string;   // Người thực sự thực hiện (nếu ủy quyền)
+  host_person_id?: string; // Người được phân công
+  actual_host_person_id?: string; // Người thực sự thực hiện (nếu ủy quyền)
   status: CauDuongStatus;
-  scheduled_date?: string;          // Ngày dự kiến (dương lịch)
-  actual_date?: string;             // Ngày thực hiện (nếu đổi)
-  reason?: string;                  // Lý do ủy quyền / đổi ngày
+  scheduled_date?: string; // Ngày dự kiến (dương lịch)
+  actual_date?: string; // Ngày thực hiện (nếu đổi)
+  reason?: string; // Lý do ủy quyền / đổi ngày
   notes?: string;
-  rotation_index?: number;          // Vị trí trong danh sách DFS khi phân công
+  rotation_index?: number; // Vị trí trong danh sách DFS khi phân công
   created_by?: string;
   created_at: string;
   updated_at: string;
@@ -334,9 +340,9 @@ export interface CauDuongAssignment {
 // Thành viên đủ điều kiện làm Cầu đương (kết quả DFS)
 export interface CauDuongEligibleMember {
   person: Person;
-  dfsIndex: number;    // Thứ tự trong danh sách DFS (0-based)
-  ageLunar: number;    // Tuổi âm hiện tại
-  isMarried: boolean;  // Đã lập gia đình (là cha trong bảng families)
+  dfsIndex: number; // Thứ tự trong danh sách DFS (0-based)
+  ageLunar: number; // Tuổi âm hiện tại
+  isMarried: boolean; // Đã lập gia đình (là cha trong bảng families)
 }
 
 // ─── Person Relations ─────────────────────────────────────────────────────────
@@ -357,8 +363,32 @@ export interface PersonRelations {
 
 // ─── Zodiac ───────────────────────────────────────────────────────────────────
 
-export const CAN = ['Canh', 'Tân', 'Nhâm', 'Quý', 'Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ'] as const;
-export const CHI = ['Thân', 'Dậu', 'Tuất', 'Hợi', 'Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi'] as const;
+export const CAN = [
+  'Canh',
+  'Tân',
+  'Nhâm',
+  'Quý',
+  'Giáp',
+  'Ất',
+  'Bính',
+  'Đinh',
+  'Mậu',
+  'Kỷ',
+] as const;
+export const CHI = [
+  'Thân',
+  'Dậu',
+  'Tuất',
+  'Hợi',
+  'Tý',
+  'Sửu',
+  'Dần',
+  'Mão',
+  'Thìn',
+  'Tỵ',
+  'Ngọ',
+  'Mùi',
+] as const;
 
 export function getZodiacYear(year: number): string {
   return `${CAN[year % 10]} ${CHI[year % 12]}`;

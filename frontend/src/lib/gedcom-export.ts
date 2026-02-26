@@ -10,8 +10,18 @@ import type { TreeData } from './supabase-data';
 import type { Person, Family } from '@/types';
 
 const GEDCOM_MONTHS = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+  'JAN',
+  'FEB',
+  'MAR',
+  'APR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AUG',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DEC',
 ];
 
 function personXref(id: string): string {
@@ -82,7 +92,7 @@ function gedcomLine(level: number, tag: string, value?: string): string {
 function buildPersonRecord(
   person: Person,
   familyMap: Map<string, string[]>, // person_id -> family_ids where person is parent
-  childFamilyMap: Map<string, string[]>, // person_id -> family_ids where person is child
+  childFamilyMap: Map<string, string[]> // person_id -> family_ids where person is child
 ): string {
   const lines: string[] = [];
   const xref = personXref(person.id);
@@ -91,7 +101,8 @@ function buildPersonRecord(
 
   // Name
   const surname = person.surname || '';
-  const given = [person.first_name, person.middle_name].filter(Boolean).join(' ') || person.display_name;
+  const given =
+    [person.first_name, person.middle_name].filter(Boolean).join(' ') || person.display_name;
   lines.push(gedcomLine(1, 'NAME', `${given} /${surname}/`));
   if (given) lines.push(gedcomLine(2, 'GIVN', given));
   if (surname) lines.push(gedcomLine(2, 'SURN', surname));
@@ -141,11 +152,7 @@ function buildPersonRecord(
   return lines.join('\n');
 }
 
-function buildFamilyRecord(
-  family: Family,
-  childrenIds: string[],
-  peopleSet: Set<string>,
-): string {
+function buildFamilyRecord(family: Family, childrenIds: string[], peopleSet: Set<string>): string {
   const lines: string[] = [];
   const xref = familyXref(family.id);
 
@@ -223,25 +230,24 @@ export function generateGedcom(data: TreeData): string {
   const sections: string[] = [];
 
   // Header
-  sections.push([
-    '0 HEAD',
-    '1 SOUR AncestorTree',
-    '2 VERS 1.2.0',
-    '2 NAME Gia Pha Dien Tu',
-    '1 DEST ANY',
-    `1 DATE ${dateStr}`,
-    '1 SUBM @SUB1@',
-    '1 GEDC',
-    '2 VERS 5.5.1',
-    '2 FORM LINEAGE-LINKED',
-    '1 CHAR UTF-8',
-  ].join('\n'));
+  sections.push(
+    [
+      '0 HEAD',
+      '1 SOUR AncestorTree',
+      '2 VERS 1.2.0',
+      '2 NAME Gia Pha Dien Tu',
+      '1 DEST ANY',
+      `1 DATE ${dateStr}`,
+      '1 SUBM @SUB1@',
+      '1 GEDC',
+      '2 VERS 5.5.1',
+      '2 FORM LINEAGE-LINKED',
+      '1 CHAR UTF-8',
+    ].join('\n')
+  );
 
   // Submitter
-  sections.push([
-    '0 @SUB1@ SUBM',
-    '1 NAME Dang Dinh - Thach Lam',
-  ].join('\n'));
+  sections.push(['0 @SUB1@ SUBM', '1 NAME Dang Dinh - Thach Lam'].join('\n'));
 
   // Individual records
   for (const person of people) {

@@ -7,13 +7,15 @@
  */
 
 import { supabase } from './supabase';
-import type { ClanArticle, ClanArticleCategory, CreateClanArticleInput, UpdateClanArticleInput } from '@/types';
+import type {
+  ClanArticle,
+  ClanArticleCategory,
+  CreateClanArticleInput,
+  UpdateClanArticleInput,
+} from '@/types';
 
 export async function getClanArticles(category?: ClanArticleCategory): Promise<ClanArticle[]> {
-  let query = supabase
-    .from('clan_articles')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  let query = supabase.from('clan_articles').select('*').order('sort_order', { ascending: true });
 
   if (category) {
     query = query.eq('category', category);
@@ -25,11 +27,7 @@ export async function getClanArticles(category?: ClanArticleCategory): Promise<C
 }
 
 export async function getClanArticle(id: string): Promise<ClanArticle | null> {
-  const { data, error } = await supabase
-    .from('clan_articles')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('clan_articles').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') return null;
@@ -50,17 +48,16 @@ export async function getFeaturedArticles(): Promise<ClanArticle[]> {
 }
 
 export async function createClanArticle(input: CreateClanArticleInput): Promise<ClanArticle> {
-  const { data, error } = await supabase
-    .from('clan_articles')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('clan_articles').insert(input).select().single();
 
   if (error) throw error;
   return data;
 }
 
-export async function updateClanArticle(id: string, input: UpdateClanArticleInput): Promise<ClanArticle> {
+export async function updateClanArticle(
+  id: string,
+  input: UpdateClanArticleInput
+): Promise<ClanArticle> {
   const { data, error } = await supabase
     .from('clan_articles')
     .update({ ...input, updated_at: new Date().toISOString() })
@@ -73,10 +70,7 @@ export async function updateClanArticle(id: string, input: UpdateClanArticleInpu
 }
 
 export async function deleteClanArticle(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('clan_articles')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('clan_articles').delete().eq('id', id);
 
   if (error) throw error;
 }

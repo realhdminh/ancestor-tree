@@ -43,16 +43,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 to-emerald-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-4">
             Đ
           </div>
           <CardTitle>Quên mật khẩu</CardTitle>
-          <CardDescription>
-            Nhập email để nhận link đặt lại mật khẩu
-          </CardDescription>
+          <CardDescription>Nhập email để nhận link đặt lại mật khẩu</CardDescription>
         </CardHeader>
         <CardContent>
           {sent ? (
@@ -61,8 +59,8 @@ export default function ForgotPasswordPage() {
                 <Mail className="h-6 w-6 text-emerald-600" />
               </div>
               <p className="text-sm text-muted-foreground">
-                Email đặt lại mật khẩu đã được gửi đến <strong>{email}</strong>.
-                Vui lòng kiểm tra hộp thư (bao gồm thư rác).
+                Email đặt lại mật khẩu đã được gửi đến <strong>{email}</strong>. Vui lòng kiểm tra
+                hộp thư (bao gồm thư rác).
               </p>
               <Button variant="outline" asChild className="w-full">
                 <Link href="/login">
@@ -81,7 +79,7 @@ export default function ForgotPasswordPage() {
                     type="email"
                     placeholder="email@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -91,7 +89,10 @@ export default function ForgotPasswordPage() {
               </form>
 
               <div className="mt-4 text-center text-sm">
-                <Link href="/login" className="text-emerald-600 hover:underline inline-flex items-center">
+                <Link
+                  href="/login"
+                  className="text-emerald-600 hover:underline inline-flex items-center"
+                >
                   <ArrowLeft className="h-3 w-3 mr-1" />
                   Quay lại đăng nhập
                 </Link>

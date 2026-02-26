@@ -47,7 +47,7 @@ export function FeaturedCharter() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {articles.slice(0, 3).map((article) => (
+          {articles.slice(0, 3).map(article => (
             <div key={article.id} className="border-l-2 border-emerald-500 pl-4">
               <div className="flex items-center gap-2 mb-1">
                 <h4 className="font-medium text-sm">{article.title}</h4>
@@ -55,9 +55,7 @@ export function FeaturedCharter() {
                   {categoryLabels[article.category] || article.category}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {article.content}
-              </p>
+              <p className="text-sm text-muted-foreground line-clamp-2">{article.content}</p>
             </div>
           ))}
         </div>

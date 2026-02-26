@@ -55,19 +55,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, s) => {
-        setSession(s);
-        setUser(s?.user ?? null);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, s) => {
+      setSession(s);
+      setUser(s?.user ?? null);
 
-        if (s?.user) {
-          const p = await fetchProfile(s.user.id);
-          setProfile(p);
-        } else {
-          setProfile(null);
-        }
+      if (s?.user) {
+        const p = await fetchProfile(s.user.id);
+        setProfile(p);
+      } else {
+        setProfile(null);
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, []);

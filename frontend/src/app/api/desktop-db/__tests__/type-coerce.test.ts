@@ -122,9 +122,7 @@ describe('coerceDataToSqlite', () => {
 describe('generateUUID', () => {
   it('returns a valid UUID v4 string', () => {
     const uuid = generateUUID();
-    expect(uuid).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-    );
+    expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
   });
 
   it('generates unique values on successive calls', () => {

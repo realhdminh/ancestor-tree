@@ -37,7 +37,7 @@ function PersonCombobox({ label, selected, onSelect, excludeId }: PersonCombobox
   const [open, setOpen] = useState(false);
   const { data: results, isFetching } = useSearchPeople(query);
 
-  const filtered = (results || []).filter((p) => p.id !== excludeId);
+  const filtered = (results || []).filter(p => p.id !== excludeId);
 
   const handleSelect = (person: Person) => {
     onSelect(person);
@@ -77,7 +77,7 @@ function PersonCombobox({ label, selected, onSelect, excludeId }: PersonCombobox
             <Input
               placeholder={`Tìm ${label.toLowerCase()}...`}
               value={query}
-              onChange={(e) => {
+              onChange={e => {
                 setQuery(e.target.value);
                 setOpen(e.target.value.length >= 2);
               }}
@@ -88,13 +88,11 @@ function PersonCombobox({ label, selected, onSelect, excludeId }: PersonCombobox
           </div>
           {open && (
             <div className="absolute z-50 w-full mt-1 bg-background border rounded-md shadow-lg max-h-48 overflow-y-auto">
-              {isFetching && (
-                <p className="px-3 py-2 text-sm text-muted-foreground">Đang tìm...</p>
-              )}
+              {isFetching && <p className="px-3 py-2 text-sm text-muted-foreground">Đang tìm...</p>}
               {!isFetching && filtered.length === 0 && query.length >= 2 && (
                 <p className="px-3 py-2 text-sm text-muted-foreground">Không tìm thấy</p>
               )}
-              {filtered.map((person) => (
+              {filtered.map(person => (
                 <button
                   key={person.id}
                   type="button"

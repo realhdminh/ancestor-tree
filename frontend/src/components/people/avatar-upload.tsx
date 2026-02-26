@@ -33,12 +33,13 @@ export function AvatarUpload({ person, canEdit, size = 'lg' }: AvatarUploadProps
 
   const initials = person.display_name
     .split(' ')
-    .map((n) => n[0])
+    .map(n => n[0])
     .slice(-2)
     .join('')
     .toUpperCase();
 
-  const genderColor = person.gender === 1 ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800';
+  const genderColor =
+    person.gender === 1 ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800';
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -36,18 +36,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  ClipboardList,
-  Plus,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Send,
-} from 'lucide-react';
+import { ClipboardList, Plus, Clock, CheckCircle2, XCircle, Send } from 'lucide-react';
 import type { ChangeType, ContributionStatus } from '@/types';
 import { toast } from 'sonner';
 
-const STATUS_CONFIG: Record<ContributionStatus, { label: string; icon: typeof Clock; variant: 'default' | 'secondary' | 'destructive' }> = {
+const STATUS_CONFIG: Record<
+  ContributionStatus,
+  { label: string; icon: typeof Clock; variant: 'default' | 'secondary' | 'destructive' }
+> = {
   pending: { label: 'Chờ duyệt', icon: Clock, variant: 'default' },
   approved: { label: 'Đã duyệt', icon: CheckCircle2, variant: 'secondary' },
   rejected: { label: 'Từ chối', icon: XCircle, variant: 'destructive' },
@@ -199,7 +195,9 @@ function NewContributionDialog({ onClose }: { onClose: () => void }) {
             </SelectTrigger>
             <SelectContent>
               {FIELD_OPTIONS.filter(f => !changes[f.value]).map(f => (
-                <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                <SelectItem key={f.value} value={f.value}>
+                  {f.label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -226,7 +224,9 @@ function NewContributionDialog({ onClose }: { onClose: () => void }) {
       </div>
 
       <DialogFooter>
-        <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+        <Button type="button" variant="outline" onClick={onClose}>
+          Hủy
+        </Button>
         <Button type="submit" disabled={createContribution.isPending} className="gap-2">
           <Send className="h-4 w-4" />
           {createContribution.isPending ? 'Đang gửi...' : 'Gửi đề xuất'}
@@ -243,8 +243,8 @@ export default function ContributionsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // Only show user's own contributions (unless admin)
-  const myContributions = contributions?.filter(c =>
-    profile?.role === 'admin' || c.author_id === profile?.id
+  const myContributions = contributions?.filter(
+    c => profile?.role === 'admin' || c.author_id === profile?.id
   );
 
   if (!user) {
@@ -252,7 +252,9 @@ export default function ContributionsPage() {
       <div className="container mx-auto px-4 py-8">
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground mb-4">Vui lòng đăng nhập để gửi đề xuất chỉnh sửa</p>
+            <p className="text-muted-foreground mb-4">
+              Vui lòng đăng nhập để gửi đề xuất chỉnh sửa
+            </p>
             <Button asChild>
               <Link href="/login">Đăng nhập</Link>
             </Button>
@@ -271,9 +273,7 @@ export default function ContributionsPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold">Đề xuất chỉnh sửa</h1>
-            <p className="text-muted-foreground">
-              Gửi yêu cầu cập nhật thông tin thành viên
-            </p>
+            <p className="text-muted-foreground">Gửi yêu cầu cập nhật thông tin thành viên</p>
           </div>
         </div>
 
@@ -309,9 +309,7 @@ export default function ContributionsPage() {
               ))}
             </div>
           ) : !myContributions?.length ? (
-            <div className="py-12 text-center text-muted-foreground">
-              Bạn chưa có đề xuất nào
-            </div>
+            <div className="py-12 text-center text-muted-foreground">Bạn chưa có đề xuất nào</div>
           ) : (
             <div className="space-y-3">
               {myContributions.map(c => {
@@ -320,27 +318,30 @@ export default function ContributionsPage() {
                 const person = people?.find(p => p.id === c.target_person);
                 return (
                   <div key={c.id} className="flex items-start gap-3 rounded-lg border p-4">
-                    <StatusIcon className={`h-5 w-5 mt-0.5 ${
-                      c.status === 'approved' ? 'text-green-600' :
-                      c.status === 'rejected' ? 'text-destructive' :
-                      'text-amber-600'
-                    }`} />
+                    <StatusIcon
+                      className={`h-5 w-5 mt-0.5 ${
+                        c.status === 'approved'
+                          ? 'text-green-600'
+                          : c.status === 'rejected'
+                            ? 'text-destructive'
+                            : 'text-amber-600'
+                      }`}
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">
-                          {CHANGE_TYPE_LABELS[c.change_type]}
-                        </span>
+                        <span className="font-medium">{CHANGE_TYPE_LABELS[c.change_type]}</span>
                         {person && (
-                          <Link href={`/people/${person.id}`} className="text-sm hover:underline text-muted-foreground">
+                          <Link
+                            href={`/people/${person.id}`}
+                            className="text-sm hover:underline text-muted-foreground"
+                          >
                             {person.display_name}
                           </Link>
                         )}
                         <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
                       </div>
                       {c.reason && (
-                        <p className="text-sm text-muted-foreground mb-2">
-                          Lý do: {c.reason}
-                        </p>
+                        <p className="text-sm text-muted-foreground mb-2">Lý do: {c.reason}</p>
                       )}
                       <div className="flex flex-wrap gap-2">
                         {Object.entries(c.changes).map(([key, val]) => (

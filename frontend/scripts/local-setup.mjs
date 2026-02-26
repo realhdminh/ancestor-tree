@@ -8,112 +8,112 @@
  * @updated 2026-02-26
  */
 
-import { execSync, spawnSync } from 'node:child_process'
-import { existsSync, writeFileSync, readFileSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { execSync, spawnSync } from 'node:child_process';
+import { existsSync, writeFileSync, readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = resolve(__dirname, '..')          // frontend/
-const ENV_FILE = resolve(ROOT, '.env.local')
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(__dirname, '..'); // frontend/
+const ENV_FILE = resolve(ROOT, '.env.local');
 
-const GREEN  = '\x1b[32m'
-const YELLOW = '\x1b[33m'
-const RED    = '\x1b[31m'
-const CYAN   = '\x1b[36m'
-const RESET  = '\x1b[0m'
+const GREEN = '\x1b[32m';
+const YELLOW = '\x1b[33m';
+const RED = '\x1b[31m';
+const CYAN = '\x1b[36m';
+const RESET = '\x1b[0m';
 
-const ok   = (msg) => console.log(`${GREEN}✅ ${msg}${RESET}`)
-const warn = (msg) => console.log(`${YELLOW}⚠️  ${msg}${RESET}`)
-const err  = (msg) => console.error(`${RED}❌ ${msg}${RESET}`)
-const info = (msg) => console.log(`${CYAN}ℹ  ${msg}${RESET}`)
-const step = (msg) => console.log(`\n${CYAN}▶ ${msg}${RESET}`)
+const ok = msg => console.log(`${GREEN}✅ ${msg}${RESET}`);
+const warn = msg => console.log(`${YELLOW}⚠️  ${msg}${RESET}`);
+const err = msg => console.error(`${RED}❌ ${msg}${RESET}`);
+const info = msg => console.log(`${CYAN}ℹ  ${msg}${RESET}`);
+const step = msg => console.log(`\n${CYAN}▶ ${msg}${RESET}`);
 
 // ─── 1. Check prerequisites ───────────────────────────────────────────────
 
-step('Checking prerequisites...')
+step('Checking prerequisites...');
 
 // Docker
-const docker = spawnSync('docker', ['info'], { stdio: 'pipe' })
+const docker = spawnSync('docker', ['info'], { stdio: 'pipe' });
 if (docker.status !== 0) {
-  err('Docker Desktop is not running.')
-  info('  → Download: https://www.docker.com/products/docker-desktop')
-  info('  → Start Docker Desktop, then run this script again.')
-  process.exit(1)
+  err('Docker Desktop is not running.');
+  info('  → Download: https://www.docker.com/products/docker-desktop');
+  info('  → Start Docker Desktop, then run this script again.');
+  process.exit(1);
 }
-ok('Docker is running')
+ok('Docker is running');
 
 // Supabase CLI
-const sbVersion = spawnSync('supabase', ['--version'], { stdio: 'pipe' })
+const sbVersion = spawnSync('supabase', ['--version'], { stdio: 'pipe' });
 if (sbVersion.status !== 0) {
-  err('Supabase CLI not found.')
-  info('  → Install: brew install supabase/tap/supabase  (macOS/Linux)')
-  info('  → Install: scoop install supabase              (Windows)')
-  info('  → Or: npm install -g supabase')
-  process.exit(1)
+  err('Supabase CLI not found.');
+  info('  → Install: brew install supabase/tap/supabase  (macOS/Linux)');
+  info('  → Install: scoop install supabase              (Windows)');
+  info('  → Or: npm install -g supabase');
+  process.exit(1);
 }
-ok(`Supabase CLI found: ${sbVersion.stdout.toString().trim()}`)
+ok(`Supabase CLI found: ${sbVersion.stdout.toString().trim()}`);
 
 // Node.js version
-const nodeMajor = parseInt(process.versions.node.split('.')[0], 10)
+const nodeMajor = parseInt(process.versions.node.split('.')[0], 10);
 if (nodeMajor < 18) {
-  err(`Node.js 18+ required (found ${process.versions.node})`)
-  process.exit(1)
+  err(`Node.js 18+ required (found ${process.versions.node})`);
+  process.exit(1);
 }
-ok(`Node.js ${process.versions.node}`)
+ok(`Node.js ${process.versions.node}`);
 
 // ─── 2. Start Supabase local stack ───────────────────────────────────────
 
-step('Starting Supabase local stack (this may take a moment on first run)...')
-info('  Ports: API=54321 | DB=54322 | Studio=54323')
+step('Starting Supabase local stack (this may take a moment on first run)...');
+info('  Ports: API=54321 | DB=54322 | Studio=54323');
 
 try {
-  execSync('supabase start', { cwd: ROOT, stdio: 'inherit' })
+  execSync('supabase start', { cwd: ROOT, stdio: 'inherit' });
 } catch {
   // `supabase start` exits non-zero when already running — check status
-  const check = spawnSync('supabase', ['status'], { cwd: ROOT, stdio: 'pipe' })
+  const check = spawnSync('supabase', ['status'], { cwd: ROOT, stdio: 'pipe' });
   if (check.status !== 0) {
-    err('Failed to start Supabase. Check Docker logs.')
-    process.exit(1)
+    err('Failed to start Supabase. Check Docker logs.');
+    process.exit(1);
   }
-  warn('Supabase was already running — using existing instance.')
+  warn('Supabase was already running — using existing instance.');
 }
 
-ok('Supabase local stack is running')
+ok('Supabase local stack is running');
 
 // ─── 3. Parse `supabase status` output ───────────────────────────────────
 
-step('Reading local credentials from supabase status...')
+step('Reading local credentials from supabase status...');
 
-const statusResult = spawnSync('supabase', ['status'], { cwd: ROOT, stdio: 'pipe' })
+const statusResult = spawnSync('supabase', ['status'], { cwd: ROOT, stdio: 'pipe' });
 if (statusResult.status !== 0) {
-  err('Could not read supabase status. Is Docker running?')
-  process.exit(1)
+  err('Could not read supabase status. Is Docker running?');
+  process.exit(1);
 }
 
-const statusText = statusResult.stdout.toString()
+const statusText = statusResult.stdout.toString();
 
 function extractValue(text, key) {
-  const match = text.match(new RegExp(`${key}:\\s*(.+)`))
-  return match ? match[1].trim() : null
+  const match = text.match(new RegExp(`${key}:\\s*(.+)`));
+  return match ? match[1].trim() : null;
 }
 
-const apiUrl      = extractValue(statusText, 'API URL')
-const anonKey     = extractValue(statusText, 'anon key')
-const serviceKey  = extractValue(statusText, 'service_role key')
+const apiUrl = extractValue(statusText, 'API URL');
+const anonKey = extractValue(statusText, 'anon key');
+const serviceKey = extractValue(statusText, 'service_role key');
 
 if (!apiUrl || !anonKey) {
-  err('Could not parse supabase status output.')
-  console.log(statusText)
-  process.exit(1)
+  err('Could not parse supabase status output.');
+  console.log(statusText);
+  process.exit(1);
 }
 
-ok(`API URL:  ${apiUrl}`)
-ok(`Anon key: ${anonKey.slice(0, 20)}...`)
+ok(`API URL:  ${apiUrl}`);
+ok(`Anon key: ${anonKey.slice(0, 20)}...`);
 
 // ─── 4. Write .env.local ─────────────────────────────────────────────────
 
-step('Writing .env.local...')
+step('Writing .env.local...');
 
 const envContent = `# ⚠️  LOCAL DEVELOPMENT — auto-generated by scripts/local-setup.mjs
 # DO NOT commit this file. Run 'pnpm local:setup' to regenerate.
@@ -125,21 +125,21 @@ ${serviceKey ? `SUPABASE_SERVICE_ROLE_KEY=${serviceKey}` : '# SUPABASE_SERVICE_R
 
 # Local development flag
 NEXT_PUBLIC_LOCAL_DEV=true
-`
+`;
 
-const existed = existsSync(ENV_FILE)
+const existed = existsSync(ENV_FILE);
 if (existed) {
   // Back up existing .env.local if it contains a cloud URL
-  const existing = readFileSync(ENV_FILE, 'utf-8')
+  const existing = readFileSync(ENV_FILE, 'utf-8');
   if (existing.includes('supabase.co')) {
-    const backup = ENV_FILE + '.cloud.bak'
-    writeFileSync(backup, existing)
-    warn(`.env.local pointed to cloud — backed up to .env.local.cloud.bak`)
+    const backup = ENV_FILE + '.cloud.bak';
+    writeFileSync(backup, existing);
+    warn(`.env.local pointed to cloud — backed up to .env.local.cloud.bak`);
   }
 }
 
-writeFileSync(ENV_FILE, envContent, 'utf-8')
-ok(`.env.local ${existed ? 'updated' : 'created'}`)
+writeFileSync(ENV_FILE, envContent, 'utf-8');
+ok(`.env.local ${existed ? 'updated' : 'created'}`);
 
 // ─── 5. Done ─────────────────────────────────────────────────────────────
 
@@ -161,4 +161,4 @@ ${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━
     ${CYAN}pnpm local:stop${RESET}   — stop containers (keep data)
     ${CYAN}pnpm local:reset${RESET}  — reset DB + re-seed demo data
     ${CYAN}pnpm local:setup${RESET}  — full setup (this script)
-`)
+`);

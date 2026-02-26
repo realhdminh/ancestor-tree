@@ -26,12 +26,29 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  RotateCcw, Plus, Pencil, Zap, UserCheck, CalendarClock, CheckCircle2, Lock,
+  RotateCcw,
+  Plus,
+  Pencil,
+  Zap,
+  UserCheck,
+  CalendarClock,
+  CheckCircle2,
+  Lock,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -107,7 +124,9 @@ function PoolForm({
       <div>
         <Label>Tổ tông (gốc nhóm) *</Label>
         <Select value={ancestorId} onValueChange={setAncestorId}>
-          <SelectTrigger><SelectValue placeholder="Chọn tổ tông" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Chọn tổ tông" />
+          </SelectTrigger>
           <SelectContent>
             {people.map(p => (
               <SelectItem key={p.id} value={p.id}>
@@ -120,12 +139,7 @@ function PoolForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>Đời tối thiểu</Label>
-          <Input
-            type="number"
-            value={minGen}
-            onChange={e => setMinGen(e.target.value)}
-            min={1}
-          />
+          <Input type="number" value={minGen} onChange={e => setMinGen(e.target.value)} min={1} />
         </div>
         <div>
           <Label>Tuổi âm tối đa (dưới)</Label>
@@ -148,7 +162,7 @@ function PoolForm({
         />
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Đang lưu...' : (pool ? 'Cập nhật' : 'Tạo nhóm')}
+        {isPending ? 'Đang lưu...' : pool ? 'Cập nhật' : 'Tạo nhóm'}
       </Button>
     </form>
   );
@@ -173,7 +187,10 @@ function DelegateDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!actualHostId) { toast.error('Chọn người thực hiện thay'); return; }
+    if (!actualHostId) {
+      toast.error('Chọn người thực hiện thay');
+      return;
+    }
     onConfirm(actualHostId, reason);
     setOpen(false);
   };
@@ -194,7 +211,9 @@ function DelegateDialog({
           <div>
             <Label>Người thực hiện thay *</Label>
             <Select value={actualHostId} onValueChange={setActualHostId}>
-              <SelectTrigger><SelectValue placeholder="Chọn thành viên" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn thành viên" />
+              </SelectTrigger>
               <SelectContent>
                 {eligibleMembers.map(m => (
                   <SelectItem key={m.person.id} value={m.person.id}>
@@ -237,7 +256,10 @@ function RescheduleDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date) { toast.error('Chọn ngày thực hiện'); return; }
+    if (!date) {
+      toast.error('Chọn ngày thực hiện');
+      return;
+    }
     onConfirm(date, reason);
     setOpen(false);
   };
@@ -293,7 +315,10 @@ export default function AdminCauDuongPage() {
   const firstPool = pools?.[0];
   const poolId = firstPool?.id;
 
-  const { data: assignments, isLoading: assignmentsLoading } = useCauDuongAssignments(poolId, selectedYear);
+  const { data: assignments, isLoading: assignmentsLoading } = useCauDuongAssignments(
+    poolId,
+    selectedYear
+  );
   const { data: eligibleMembers } = useEligibleMembers(poolId, selectedYear);
   const autoAssignMutation = useAutoAssignNextCeremony();
   const updateAssignmentMutation = useUpdateCauDuongAssignment();
@@ -304,8 +329,12 @@ export default function AdminCauDuongPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <Lock className="h-10 w-10 mx-auto mb-4 text-muted-foreground opacity-40" />
-            <p className="text-muted-foreground">Bạn cần quyền biên tập viên để truy cập trang này</p>
-            <Button asChild className="mt-4"><Link href="/">Về trang chủ</Link></Button>
+            <p className="text-muted-foreground">
+              Bạn cần quyền biên tập viên để truy cập trang này
+            </p>
+            <Button asChild className="mt-4">
+              <Link href="/">Về trang chủ</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -313,7 +342,11 @@ export default function AdminCauDuongPage() {
   }
 
   const handleCreatePool = async (data: {
-    name: string; ancestor_id: string; min_generation: number; max_age_lunar: number; description?: string;
+    name: string;
+    ancestor_id: string;
+    min_generation: number;
+    max_age_lunar: number;
+    description?: string;
   }) => {
     try {
       await createPoolMutation.mutateAsync({ ...data, is_active: true });
@@ -325,11 +358,18 @@ export default function AdminCauDuongPage() {
   };
 
   const handleUpdatePool = async (data: {
-    name: string; ancestor_id: string; min_generation: number; max_age_lunar: number; description?: string;
+    name: string;
+    ancestor_id: string;
+    min_generation: number;
+    max_age_lunar: number;
+    description?: string;
   }) => {
     if (!editingPool) return;
     try {
-      await updatePoolMutation.mutateAsync({ id: editingPool.id, input: { ...data, is_active: editingPool.is_active } });
+      await updatePoolMutation.mutateAsync({
+        id: editingPool.id,
+        input: { ...data, is_active: editingPool.is_active },
+      });
       toast.success('Đã cập nhật nhóm');
       setPoolDialogOpen(false);
       setEditingPool(undefined);
@@ -341,14 +381,23 @@ export default function AdminCauDuongPage() {
   const handleAutoAssign = async (ceremonyType: CauDuongCeremonyType) => {
     if (!poolId) return;
     try {
-      await autoAssignMutation.mutateAsync({ poolId, year: selectedYear, ceremonyType, createdBy: profile?.id ?? '' });
+      await autoAssignMutation.mutateAsync({
+        poolId,
+        year: selectedYear,
+        ceremonyType,
+        createdBy: profile?.id ?? '',
+      });
       toast.success(`Đã phân công ${CAU_DUONG_CEREMONY_LABELS[ceremonyType]}`);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Lỗi khi phân công');
     }
   };
 
-  const handleDelegate = async (assignmentId: string, actualHostPersonId: string, reason: string) => {
+  const handleDelegate = async (
+    assignmentId: string,
+    actualHostPersonId: string,
+    reason: string
+  ) => {
     if (!poolId) return;
     try {
       await updateAssignmentMutation.mutateAsync({
@@ -410,14 +459,19 @@ export default function AdminCauDuongPage() {
             </SelectTrigger>
             <SelectContent>
               {YEAR_OPTIONS.map(y => (
-                <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>
+                <SelectItem key={y} value={y.toString()}>
+                  Năm {y}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Dialog
             open={poolDialogOpen}
-            onOpenChange={open => { setPoolDialogOpen(open); if (!open) setEditingPool(undefined); }}
+            onOpenChange={open => {
+              setPoolDialogOpen(open);
+              if (!open) setEditingPool(undefined);
+            }}
           >
             <DialogTrigger asChild>
               <Button>
@@ -427,7 +481,9 @@ export default function AdminCauDuongPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingPool ? 'Sửa nhóm Cầu đương' : 'Tạo nhóm Cầu đương'}</DialogTitle>
+                <DialogTitle>
+                  {editingPool ? 'Sửa nhóm Cầu đương' : 'Tạo nhóm Cầu đương'}
+                </DialogTitle>
               </DialogHeader>
               <PoolForm
                 key={editingPool?.id || 'new'}
@@ -443,7 +499,11 @@ export default function AdminCauDuongPage() {
 
       {/* Pool info */}
       {poolsLoading ? (
-        <Card><CardContent className="py-4 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></CardContent></Card>
+        <Card>
+          <CardContent className="py-4 animate-pulse">
+            <div className="h-4 bg-muted rounded w-48" />
+          </CardContent>
+        </Card>
       ) : !firstPool ? (
         <Card className="border-dashed">
           <CardContent className="py-10 text-center text-muted-foreground">
@@ -464,7 +524,10 @@ export default function AdminCauDuongPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { setEditingPool(firstPool); setPoolDialogOpen(true); }}
+              onClick={() => {
+                setEditingPool(firstPool);
+                setPoolDialogOpen(true);
+              }}
             >
               <Pencil className="h-3.5 w-3.5 mr-1" />
               Chỉnh sửa
@@ -478,9 +541,7 @@ export default function AdminCauDuongPage() {
         <>
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">
-                Lịch phân công năm {selectedYear}
-              </CardTitle>
+              <CardTitle className="text-base">Lịch phân công năm {selectedYear}</CardTitle>
               <CardDescription>
                 {eligibleMembers?.length ?? '...'} thành viên đủ điều kiện trong vòng xoay
               </CardDescription>
@@ -515,8 +576,11 @@ export default function AdminCauDuongPage() {
                               {assignment.actual_host_person &&
                                 assignment.actual_host_person.id !== assignment.host_person?.id && (
                                   <span className="ml-1">
-                                    → <span className="font-medium">{assignment.actual_host_person.display_name}</span>
-                                    {' '}(ủy quyền)
+                                    →{' '}
+                                    <span className="font-medium">
+                                      {assignment.actual_host_person.display_name}
+                                    </span>{' '}
+                                    (ủy quyền)
                                   </span>
                                 )}
                             </p>
@@ -536,8 +600,11 @@ export default function AdminCauDuongPage() {
                         {assignment && (
                           <Badge
                             variant={
-                              assignment.status === 'completed' ? 'default' :
-                              assignment.status === 'cancelled' ? 'destructive' : 'secondary'
+                              assignment.status === 'completed'
+                                ? 'default'
+                                : assignment.status === 'cancelled'
+                                  ? 'destructive'
+                                  : 'secondary'
                             }
                           >
                             {STATUS_LABELS[assignment.status]}

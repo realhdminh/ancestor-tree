@@ -14,7 +14,13 @@ import { PersonCard } from '@/components/people/person-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Search, Filter, Users, Plus, X } from 'lucide-react';
 import Link from 'next/link';
@@ -22,7 +28,7 @@ import Link from 'next/link';
 export default function PeoplePage() {
   const { data: people, isLoading, error } = usePeople();
   const { data: stats } = useStats();
-  
+
   const [search, setSearch] = useState('');
   const [generationFilter, setGenerationFilter] = useState<string>('all');
   const [chiFilter, setChiFilter] = useState<string>('all');
@@ -42,32 +48,33 @@ export default function PeoplePage() {
   // Filter people
   const filteredPeople = useMemo(() => {
     if (!people) return [];
-    
+
     return people.filter(person => {
       // Search filter
       if (search && !person.display_name.toLowerCase().includes(search.toLowerCase())) {
         return false;
       }
-      
+
       // Generation filter
       if (generationFilter !== 'all' && person.generation !== parseInt(generationFilter)) {
         return false;
       }
-      
+
       // Chi filter
       if (chiFilter !== 'all' && person.chi !== parseInt(chiFilter)) {
         return false;
       }
-      
+
       // Status filter
       if (statusFilter === 'living' && !person.is_living) return false;
       if (statusFilter === 'deceased' && person.is_living) return false;
-      
+
       return true;
     });
   }, [people, search, generationFilter, chiFilter, statusFilter]);
 
-  const hasFilters = search || generationFilter !== 'all' || chiFilter !== 'all' || statusFilter !== 'all';
+  const hasFilters =
+    search || generationFilter !== 'all' || chiFilter !== 'all' || statusFilter !== 'all';
 
   const clearFilters = () => {
     setSearch('');
@@ -98,7 +105,9 @@ export default function PeoplePage() {
             Thành viên
           </h1>
           <p className="text-muted-foreground">
-            {stats ? `${stats.totalPeople} người trong ${stats.totalGenerations} đời` : 'Đang tải...'}
+            {stats
+              ? `${stats.totalPeople} người trong ${stats.totalGenerations} đời`
+              : 'Đang tải...'}
           </p>
         </div>
         <Button asChild>
@@ -124,11 +133,11 @@ export default function PeoplePage() {
             <Input
               placeholder="Tìm theo tên..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               className="pl-9"
             />
           </div>
-          
+
           {/* Filter selects */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Select value={generationFilter} onValueChange={setGenerationFilter}>
@@ -186,7 +195,7 @@ export default function PeoplePage() {
         <p className="text-sm text-muted-foreground mb-4">
           {isLoading ? 'Đang tải...' : `Hiển thị ${filteredPeople.length} người`}
         </p>
-        
+
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (

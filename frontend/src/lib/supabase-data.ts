@@ -1,7 +1,16 @@
 import { supabase } from './supabase';
 import type {
-  Person, Family, Profile, Contribution, Event, Media,
-  CreatePersonInput, UpdatePersonInput, CreateMediaInput, ContributionStatus, EventType,
+  Person,
+  Family,
+  Profile,
+  Contribution,
+  Event,
+  Media,
+  CreatePersonInput,
+  UpdatePersonInput,
+  CreateMediaInput,
+  ContributionStatus,
+  EventType,
   PersonRelations,
 } from '@/types';
 
@@ -26,18 +35,14 @@ export async function getPeople(): Promise<Person[]> {
     .select('*')
     .order('generation', { ascending: true })
     .order('display_name', { ascending: true });
-  
+
   if (error) throw error;
   return data || [];
 }
 
 export async function getPerson(id: string): Promise<Person | null> {
-  const { data, error } = await supabase
-    .from('people')
-    .select('*')
-    .eq('id', id)
-    .single();
-  
+  const { data, error } = await supabase.from('people').select('*').eq('id', id).single();
+
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -46,12 +51,8 @@ export async function getPerson(id: string): Promise<Person | null> {
 }
 
 export async function getPersonByHandle(handle: string): Promise<Person | null> {
-  const { data, error } = await supabase
-    .from('people')
-    .select('*')
-    .eq('handle', handle)
-    .single();
-  
+  const { data, error } = await supabase.from('people').select('*').eq('handle', handle).single();
+
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -65,11 +66,7 @@ export async function createPerson(input: CreatePersonInput): Promise<Person> {
     Object.entries(input).map(([k, v]) => [k, v === '' ? null : v])
   ) as CreatePersonInput;
 
-  const { data, error } = await supabase
-    .from('people')
-    .insert(sanitized)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('people').insert(sanitized).select().single();
 
   if (error) throw error;
   return data;
@@ -93,11 +90,8 @@ export async function updatePerson(id: string, input: UpdatePersonInput): Promis
 }
 
 export async function deletePerson(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('people')
-    .delete()
-    .eq('id', id);
-  
+  const { error } = await supabase.from('people').delete().eq('id', id);
+
   if (error) throw error;
 }
 
@@ -121,7 +115,7 @@ export async function getPeopleByGeneration(generation: number): Promise<Person[
     .select('*')
     .eq('generation', generation)
     .order('display_name', { ascending: true });
-  
+
   if (error) throw error;
   return data || [];
 }
@@ -135,18 +129,14 @@ export async function getFamilies(): Promise<Family[]> {
     .from('families')
     .select('*')
     .order('sort_order', { ascending: true });
-  
+
   if (error) throw error;
   return data || [];
 }
 
 export async function getFamily(id: string): Promise<Family | null> {
-  const { data, error } = await supabase
-    .from('families')
-    .select('*')
-    .eq('id', id)
-    .single();
-  
+  const { data, error } = await supabase.from('families').select('*').eq('id', id).single();
+
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -160,41 +150,41 @@ export async function getFamilyChildren(familyId: string): Promise<Person[]> {
     .select('person_id, sort_order')
     .eq('family_id', familyId)
     .order('sort_order', { ascending: true });
-  
+
   if (error) throw error;
   if (!data || data.length === 0) return [];
-  
+
   const personIds = data.map(c => c.person_id);
   const { data: people, error: peopleError } = await supabase
     .from('people')
     .select('*')
     .in('id', personIds);
-  
+
   if (peopleError) throw peopleError;
-  
+
   // Sort by original order
   const orderMap = new Map(data.map(c => [c.person_id, c.sort_order]));
-  return (people || []).sort((a, b) => 
-    (orderMap.get(a.id) || 0) - (orderMap.get(b.id) || 0)
-  );
+  return (people || []).sort((a, b) => (orderMap.get(a.id) || 0) - (orderMap.get(b.id) || 0));
 }
 
-export async function createFamily(input: Omit<Family, 'id' | 'created_at' | 'updated_at'>): Promise<Family> {
-  const { data, error } = await supabase
-    .from('families')
-    .insert(input)
-    .select()
-    .single();
-  
+export async function createFamily(
+  input: Omit<Family, 'id' | 'created_at' | 'updated_at'>
+): Promise<Family> {
+  const { data, error } = await supabase.from('families').insert(input).select().single();
+
   if (error) throw error;
   return data;
 }
 
-export async function addChildToFamily(familyId: string, personId: string, sortOrder: number): Promise<void> {
+export async function addChildToFamily(
+  familyId: string,
+  personId: string,
+  sortOrder: number
+): Promise<void> {
   const { error } = await supabase
     .from('children')
     .insert({ family_id: familyId, person_id: personId, sort_order: sortOrder });
-  
+
   if (error) throw error;
 }
 
@@ -243,7 +233,10 @@ export async function getPersonRelations(personId: string): Promise<PersonRelati
       ? supabase
           .from('children')
           .select('family_id, person_id, sort_order')
-          .in('family_id', ownFamilies.map((f) => f.id))
+          .in(
+            'family_id',
+            ownFamilies.map(f => f.id)
+          )
           .order('sort_order', { ascending: true })
       : Promise.resolve({ data: [], error: null }),
   ]);
@@ -289,13 +282,13 @@ export async function getPersonRelations(personId: string): Promise<PersonRelati
   let parentFamilyResult: PersonRelations['parentFamily'] = null;
   if (parentFamily) {
     const siblings = siblingRows
-      .filter((r) => r.person_id !== personId)
-      .map((r) => personMap.get(r.person_id))
+      .filter(r => r.person_id !== personId)
+      .map(r => personMap.get(r.person_id))
       .filter(Boolean) as Person[];
     parentFamilyResult = {
       family: parentFamily,
-      father: parentFamily.father_id ? (personMap.get(parentFamily.father_id) || null) : null,
-      mother: parentFamily.mother_id ? (personMap.get(parentFamily.mother_id) || null) : null,
+      father: parentFamily.father_id ? personMap.get(parentFamily.father_id) || null : null,
+      mother: parentFamily.mother_id ? personMap.get(parentFamily.mother_id) || null : null,
       siblings,
     };
   }
@@ -307,14 +300,14 @@ export async function getPersonRelations(personId: string): Promise<PersonRelati
     childrenByFamily.get(r.family_id)!.push(r);
   }
 
-  const resolvedOwnFamilies = ownFamilies.map((family) => {
+  const resolvedOwnFamilies = ownFamilies.map(family => {
     const spouseId = family.father_id === personId ? family.mother_id : family.father_id;
     const familyChildren = (childrenByFamily.get(family.id) || [])
-      .map((r) => personMap.get(r.person_id))
+      .map(r => personMap.get(r.person_id))
       .filter(Boolean) as Person[];
     return {
       family,
-      spouse: spouseId ? (personMap.get(spouseId) || null) : null,
+      spouse: spouseId ? personMap.get(spouseId) || null : null,
       children: familyChildren,
     };
   });
@@ -406,7 +399,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     .select('*')
     .eq('user_id', userId)
     .single();
-  
+
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -419,7 +412,7 @@ export async function getProfiles(): Promise<Profile[]> {
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false });
-  
+
   if (error) throw error;
   return data || [];
 }
@@ -431,7 +424,7 @@ export async function updateProfile(userId: string, input: Partial<Profile>): Pr
     .eq('user_id', userId)
     .select()
     .single();
-  
+
   if (error) throw error;
   return data;
 }
@@ -451,7 +444,7 @@ export async function updateUserRole(userId: string, role: Profile['role']): Pro
 // FR-507: link a user account to a person in the family tree
 export async function updateLinkedPerson(
   userId: string,
-  personId: string | null,
+  personId: string | null
 ): Promise<Profile> {
   const { data, error } = await supabase
     .from('profiles')
@@ -467,7 +460,7 @@ export async function updateLinkedPerson(
 // FR-508: set the subtree root that a branch editor can edit (null = global)
 export async function updateEditRootPerson(
   userId: string,
-  personId: string | null,
+  personId: string | null
 ): Promise<Profile> {
   const { data, error } = await supabase
     .from('profiles')
@@ -484,7 +477,7 @@ export async function updateEditRootPerson(
 // Calls the PostgreSQL function is_person_in_subtree via supabase.rpc
 export async function checkPersonInSubtree(
   rootPersonId: string,
-  targetPersonId: string,
+  targetPersonId: string
 ): Promise<boolean> {
   const { data, error } = await supabase.rpc('is_person_in_subtree', {
     root_id: rootPersonId,
@@ -512,14 +505,14 @@ export async function getStats(): Promise<{
   const { data: people, error } = await supabase
     .from('people')
     .select('id, generation, chi, is_living');
-  
+
   if (error) throw error;
-  
+
   const generations = new Set(people?.map(p => p.generation) || []);
   const chis = new Set(people?.filter(p => p.chi).map(p => p.chi) || []);
   const living = people?.filter(p => p.is_living).length || 0;
   const deceased = people?.filter(p => !p.is_living).length || 0;
-  
+
   return {
     totalPeople: people?.length || 0,
     totalGenerations: generations.size,
@@ -545,11 +538,11 @@ export async function getTreeData(): Promise<TreeData> {
     supabase.from('families').select('*'),
     supabase.from('children').select('family_id, person_id, sort_order'),
   ]);
-  
+
   if (peopleRes.error) throw peopleRes.error;
   if (familiesRes.error) throw familiesRes.error;
   if (childrenRes.error) throw childrenRes.error;
-  
+
   return {
     people: peopleRes.data || [],
     families: familiesRes.data || [],
@@ -572,11 +565,7 @@ export async function getEvents(): Promise<Event[]> {
 }
 
 export async function getEvent(id: string): Promise<Event | null> {
-  const { data, error } = await supabase
-    .from('events')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') return null;
@@ -597,17 +586,16 @@ export async function getEventsByType(eventType: EventType): Promise<Event[]> {
 }
 
 export async function createEvent(input: Omit<Event, 'id' | 'created_at'>): Promise<Event> {
-  const { data, error } = await supabase
-    .from('events')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('events').insert(input).select().single();
 
   if (error) throw error;
   return data;
 }
 
-export async function updateEvent(id: string, input: Partial<Omit<Event, 'id' | 'created_at'>>): Promise<Event> {
+export async function updateEvent(
+  id: string,
+  input: Partial<Omit<Event, 'id' | 'created_at'>>
+): Promise<Event> {
   const { data, error } = await supabase
     .from('events')
     .update(input)
@@ -620,10 +608,7 @@ export async function updateEvent(id: string, input: Partial<Omit<Event, 'id' | 
 }
 
 export async function deleteEvent(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('events')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('events').delete().eq('id', id);
 
   if (error) throw error;
 }
@@ -633,10 +618,7 @@ export async function deleteEvent(id: string): Promise<void> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export async function getContributions(status?: ContributionStatus): Promise<Contribution[]> {
-  let query = supabase
-    .from('contributions')
-    .select('*')
-    .order('created_at', { ascending: false });
+  let query = supabase.from('contributions').select('*').order('created_at', { ascending: false });
 
   if (status) {
     query = query.eq('status', status);
@@ -648,11 +630,7 @@ export async function getContributions(status?: ContributionStatus): Promise<Con
 }
 
 export async function getContribution(id: string): Promise<Contribution | null> {
-  const { data, error } = await supabase
-    .from('contributions')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('contributions').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') return null;
@@ -668,11 +646,7 @@ export async function createContribution(input: {
   changes: Record<string, unknown>;
   reason?: string;
 }): Promise<Contribution> {
-  const { data, error } = await supabase
-    .from('contributions')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('contributions').insert(input).select().single();
 
   if (error) throw error;
   return data;
@@ -694,12 +668,32 @@ export async function reviewContribution(
   if (fetchError) throw fetchError;
 
   // If approving an update, apply the changes to the person record
-  if (status === 'approved' && contribution.change_type === 'update' && contribution.target_person) {
+  if (
+    status === 'approved' &&
+    contribution.change_type === 'update' &&
+    contribution.target_person
+  ) {
     const allowedFields = [
-      'display_name', 'first_name', 'middle_name', 'surname', 'pen_name', 'taboo_name',
-      'phone', 'email', 'zalo', 'facebook', 'address', 'hometown',
-      'birth_year', 'death_year', 'death_lunar', 'birth_place', 'death_place',
-      'occupation', 'biography', 'notes',
+      'display_name',
+      'first_name',
+      'middle_name',
+      'surname',
+      'pen_name',
+      'taboo_name',
+      'phone',
+      'email',
+      'zalo',
+      'facebook',
+      'address',
+      'hometown',
+      'birth_year',
+      'death_year',
+      'death_lunar',
+      'birth_place',
+      'death_place',
+      'occupation',
+      'biography',
+      'notes',
     ];
     const safeChanges: Record<string, unknown> = {};
     for (const [key, val] of Object.entries(contribution.changes)) {
@@ -761,33 +755,21 @@ export async function getMediaByPerson(personId: string): Promise<Media[]> {
 }
 
 export async function createMedia(input: CreateMediaInput): Promise<Media> {
-  const { data, error } = await supabase
-    .from('media')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('media').insert(input).select().single();
 
   if (error) throw error;
   return data;
 }
 
 export async function updateMedia(id: string, input: Partial<CreateMediaInput>): Promise<Media> {
-  const { data, error } = await supabase
-    .from('media')
-    .update(input)
-    .eq('id', id)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('media').update(input).eq('id', id).select().single();
 
   if (error) throw error;
   return data;
 }
 
 export async function deleteMedia(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('media')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('media').delete().eq('id', id);
 
   if (error) throw error;
 }
