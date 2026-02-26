@@ -45,7 +45,7 @@ export function isEligibleForCauDuong(
   fatherIds: Set<string>,
   minGeneration: number,
   maxAgeLunar: number,
-  currentYear: number,
+  currentYear: number
 ): boolean {
   if (person.gender !== 1) return false;
   if (!person.is_living) return false;
@@ -65,7 +65,7 @@ export function isEligibleForCauDuong(
 export function buildDFSOrder(
   ancestorId: string,
   familiesByFatherId: Map<string, Array<{ id: string; sort_order: number }>>,
-  childrenByFamilyId: Map<string, Array<{ person_id: string; sort_order: number }>>,
+  childrenByFamilyId: Map<string, Array<{ person_id: string; sort_order: number }>>
 ): string[] {
   const result: string[] = [];
   const visited = new Set<string>(); // tránh vòng lặp nếu có dữ liệu lỗi
@@ -107,11 +107,7 @@ export async function getCauDuongPools(): Promise<CauDuongPool[]> {
 }
 
 export async function getCauDuongPool(id: string): Promise<CauDuongPool | null> {
-  const { data, error } = await supabase
-    .from('cau_duong_pools')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('cau_duong_pools').select('*').eq('id', id).single();
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -120,20 +116,16 @@ export async function getCauDuongPool(id: string): Promise<CauDuongPool | null> 
 }
 
 export async function createCauDuongPool(
-  input: Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>,
+  input: Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>
 ): Promise<CauDuongPool> {
-  const { data, error } = await supabase
-    .from('cau_duong_pools')
-    .insert(input)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('cau_duong_pools').insert(input).select().single();
   if (error) throw error;
   return data;
 }
 
 export async function updateCauDuongPool(
   id: string,
-  input: Partial<Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>>,
+  input: Partial<Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>>
 ): Promise<CauDuongPool> {
   const { data, error } = await supabase
     .from('cau_duong_pools')
@@ -149,7 +141,7 @@ export async function updateCauDuongPool(
 
 export async function getCauDuongAssignments(
   poolId: string,
-  year?: number,
+  year?: number
 ): Promise<CauDuongAssignment[]> {
   let query = supabase
     .from('cau_duong_assignments')
@@ -168,7 +160,7 @@ export async function getCauDuongAssignments(
 }
 
 export async function createCauDuongAssignment(
-  input: Omit<CauDuongAssignment, 'id' | 'created_at' | 'updated_at'>,
+  input: Omit<CauDuongAssignment, 'id' | 'created_at' | 'updated_at'>
 ): Promise<CauDuongAssignment> {
   const { data, error } = await supabase
     .from('cau_duong_assignments')
@@ -181,7 +173,7 @@ export async function createCauDuongAssignment(
 
 export async function updateCauDuongAssignment(
   id: string,
-  input: Partial<Omit<CauDuongAssignment, 'id' | 'created_at' | 'updated_at'>>,
+  input: Partial<Omit<CauDuongAssignment, 'id' | 'created_at' | 'updated_at'>>
 ): Promise<CauDuongAssignment> {
   const { data, error } = await supabase
     .from('cau_duong_assignments')
@@ -201,7 +193,7 @@ export async function updateCauDuongAssignment(
  */
 export async function getEligibleMembersInDFSOrder(
   poolId: string,
-  currentYear: number,
+  currentYear: number
 ): Promise<CauDuongEligibleMember[]> {
   // 1. Lấy config nhóm
   const pool = await getCauDuongPool(poolId);
@@ -244,7 +236,7 @@ export async function getEligibleMembersInDFSOrder(
 
   // Set of person IDs that are fathers (đã lập gia đình)
   const fatherIds = new Set<string>(
-    allFamilies.filter(f => f.father_id).map(f => f.father_id as string),
+    allFamilies.filter(f => f.father_id).map(f => f.father_id as string)
   );
 
   // 4. DFS từ tổ tông → danh sách UUID con cháu theo thứ tự gia phả
@@ -261,7 +253,9 @@ export async function getEligibleMembersInDFSOrder(
     const ageLunar = calcAgeLunar(person.birth_year, currentYear);
     const married = fatherIds.has(person.id);
 
-    if (isEligibleForCauDuong(person, fatherIds, pool.min_generation, pool.max_age_lunar, currentYear)) {
+    if (
+      isEligibleForCauDuong(person, fatherIds, pool.min_generation, pool.max_age_lunar, currentYear)
+    ) {
       result.push({
         person,
         dfsIndex,
@@ -284,7 +278,7 @@ export async function getEligibleMembersInDFSOrder(
  */
 export async function getNextHostInRotation(
   poolId: string,
-  currentYear: number,
+  currentYear: number
 ): Promise<{ member: CauDuongEligibleMember; rotationIndex: number } | null> {
   const [eligibleList, pastAssignments] = await Promise.all([
     getEligibleMembersInDFSOrder(poolId, currentYear),
@@ -322,7 +316,7 @@ export async function autoAssignNextCeremony(
   year: number,
   ceremonyType: CauDuongCeremonyType,
   createdBy: string,
-  notes?: string,
+  notes?: string
 ): Promise<CauDuongAssignment> {
   const currentYear = new Date().getFullYear();
   const next = await getNextHostInRotation(poolId, currentYear);
@@ -351,7 +345,7 @@ export async function autoAssignNextCeremony(
 export async function delegateCauDuong(
   assignmentId: string,
   actualHostPersonId: string,
-  reason: string,
+  reason: string
 ): Promise<CauDuongAssignment> {
   return updateCauDuongAssignment(assignmentId, {
     actual_host_person_id: actualHostPersonId,
@@ -366,7 +360,7 @@ export async function delegateCauDuong(
 export async function rescheduleCauDuong(
   assignmentId: string,
   actualDate: string,
-  reason: string,
+  reason: string
 ): Promise<CauDuongAssignment> {
   return updateCauDuongAssignment(assignmentId, {
     actual_date: actualDate,
@@ -381,7 +375,7 @@ export async function rescheduleCauDuong(
 export async function completeCauDuong(
   assignmentId: string,
   actualDate?: string,
-  notes?: string,
+  notes?: string
 ): Promise<CauDuongAssignment> {
   return updateCauDuongAssignment(assignmentId, {
     status: 'completed',
@@ -395,8 +389,10 @@ export async function completeCauDuong(
  */
 export async function getCauDuongAssignmentsWithPeople(
   poolId: string,
-  year?: number,
-): Promise<Array<CauDuongAssignment & { host_person: Person | null; actual_host_person: Person | null }>> {
+  year?: number
+): Promise<
+  Array<CauDuongAssignment & { host_person: Person | null; actual_host_person: Person | null }>
+> {
   const assignments = await getCauDuongAssignments(poolId, year);
 
   if (assignments.length === 0) return [];
@@ -408,7 +404,8 @@ export async function getCauDuongAssignmentsWithPeople(
     if (a.actual_host_person_id) personIds.add(a.actual_host_person_id);
   }
 
-  if (personIds.size === 0) return assignments.map(a => ({ ...a, host_person: null, actual_host_person: null }));
+  if (personIds.size === 0)
+    return assignments.map(a => ({ ...a, host_person: null, actual_host_person: null }));
 
   const { data: people, error } = await supabase
     .from('people')

@@ -92,10 +92,10 @@ interface TreeNodeProps {
 
 function TreeNode({ node, onSelect, onToggleCollapse, isSelected }: TreeNodeProps) {
   const { person, x, y, isCollapsed, hasChildren } = node;
-  
+
   const initials = person.display_name
     .split(' ')
-    .map((n) => n[0])
+    .map(n => n[0])
     .slice(-2)
     .join('')
     .toUpperCase();
@@ -124,15 +124,13 @@ function TreeNode({ node, onSelect, onToggleCollapse, isSelected }: TreeNodeProp
           <span className="text-xs font-medium text-center line-clamp-2 leading-tight">
             {person.display_name}
           </span>
-          {!person.is_living && (
-            <span className="text-[10px] text-muted-foreground">†</span>
-          )}
-          
+          {!person.is_living && <span className="text-[10px] text-muted-foreground">†</span>}
+
           {/* Collapse/Expand button */}
           {hasChildren && (
             <button
               className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-background border rounded-full flex items-center justify-center shadow-sm hover:bg-muted transition-colors z-10"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onToggleCollapse(person.id);
               }}
@@ -230,7 +228,7 @@ function Minimap({ nodes, viewBox, treeWidth, treeHeight, onViewportClick }: Min
       >
         <g transform={`scale(${scale})`}>
           {/* Nodes as dots */}
-          {visibleNodes.map((node) => (
+          {visibleNodes.map(node => (
             <circle
               key={node.person.id}
               cx={node.x + NODE_WIDTH / 2}
@@ -239,7 +237,7 @@ function Minimap({ nodes, viewBox, treeWidth, treeHeight, onViewportClick }: Min
               className={node.person.gender === 1 ? 'fill-blue-400' : 'fill-pink-400'}
             />
           ))}
-          
+
           {/* Viewport rectangle */}
           <rect
             x={viewBox.x}
@@ -289,7 +287,7 @@ function buildTreeLayout(
   }
   for (const child of children) {
     if (!childToFamily.has(child.person_id)) {
-      const fam = families.find((f) => f.id === child.family_id);
+      const fam = families.find(f => f.id === child.family_id);
       if (fam) childToFamily.set(child.person_id, fam);
     }
   }
@@ -311,8 +309,8 @@ function buildTreeLayout(
           if (fam.father_id && fam.father_id !== personId) visible.add(fam.father_id);
           if (fam.mother_id && fam.mother_id !== personId) visible.add(fam.mother_id);
           children
-            .filter((c) => c.family_id === fam.id)
-            .forEach((c) => addWithDescendants(c.person_id));
+            .filter(c => c.family_id === fam.id)
+            .forEach(c => addWithDescendants(c.person_id));
         }
       };
       addWithDescendants(filterRootId);
@@ -320,19 +318,19 @@ function buildTreeLayout(
     }
 
     if (viewMode === 'all') {
-      people.forEach((p) => visible.add(p.id));
+      people.forEach(p => visible.add(p.id));
       const hideDescendants = (personId: string) => {
         const fams = fatherToFamilies.get(personId) || [];
         for (const fam of fams) {
           children
-            .filter((c) => c.family_id === fam.id)
-            .forEach((c) => {
+            .filter(c => c.family_id === fam.id)
+            .forEach(c => {
               visible.delete(c.person_id);
               hideDescendants(c.person_id);
             });
         }
       };
-      collapsedNodes.forEach((nodeId) => hideDescendants(nodeId));
+      collapsedNodes.forEach(nodeId => hideDescendants(nodeId));
     } else if (viewMode === 'ancestors' && focusPersonId) {
       const addAncestors = (personId: string) => {
         visible.add(personId);
@@ -352,19 +350,19 @@ function buildTreeLayout(
         for (const fam of fams) {
           if (fam.father_id && fam.father_id !== personId) visible.add(fam.father_id);
           if (fam.mother_id && fam.mother_id !== personId) visible.add(fam.mother_id);
-          children.filter((c) => c.family_id === fam.id).forEach((c) => addDescendants(c.person_id));
+          children.filter(c => c.family_id === fam.id).forEach(c => addDescendants(c.person_id));
         }
       };
       addDescendants(focusPersonId);
     } else {
-      people.forEach((p) => visible.add(p.id));
+      people.forEach(p => visible.add(p.id));
     }
 
     return visible;
   };
 
   const visibleIds = getVisiblePeopleIds();
-  const visiblePeople = people.filter((p) => visibleIds.has(p.id));
+  const visiblePeople = people.filter(p => visibleIds.has(p.id));
 
   if (visiblePeople.length === 0) {
     return { nodes: [], connections: [], width: 0, height: 0, offsetX: 0 };
@@ -376,9 +374,11 @@ function buildTreeLayout(
     const result: string[] = [];
     for (const fam of fams) {
       children
-        .filter((c) => c.family_id === fam.id && visibleIds.has(c.person_id))
+        .filter(c => c.family_id === fam.id && visibleIds.has(c.person_id))
         .sort((a, b) => a.sort_order - b.sort_order)
-        .forEach((c) => { if (!result.includes(c.person_id)) result.push(c.person_id); });
+        .forEach(c => {
+          if (!result.includes(c.person_id)) result.push(c.person_id);
+        });
     }
     return result;
   };
@@ -396,7 +396,7 @@ function buildTreeLayout(
   for (const p of visiblePeople) {
     if (p.gender === 2) {
       const fams = motherToFamilies.get(p.id) || [];
-      if (fams.some((f) => f.father_id && visibleIds.has(f.father_id))) {
+      if (fams.some(f => f.father_id && visibleIds.has(f.father_id))) {
         positionedAsWife.add(p.id);
       }
     }
@@ -419,9 +419,11 @@ function buildTreeLayout(
     const wife = getVisibleWife(personId);
     const visChildren = collapsedNodes.has(personId) ? [] : getVisibleChildrenAsFather(personId);
     const coupleWidth = NODE_WIDTH + (wife ? COUPLE_GAP + NODE_WIDTH : 0);
-    const childrenWidth = visChildren.length > 0
-      ? visChildren.reduce((s, c) => s + computeSubtreeWidth(c), 0) + (visChildren.length - 1) * SIBLING_GAP
-      : 0;
+    const childrenWidth =
+      visChildren.length > 0
+        ? visChildren.reduce((s, c) => s + computeSubtreeWidth(c), 0) +
+          (visChildren.length - 1) * SIBLING_GAP
+        : 0;
     const result = Math.max(coupleWidth, childrenWidth);
     subtreeWidths.set(personId, result);
     return result;
@@ -444,8 +446,9 @@ function buildTreeLayout(
 
     // Children spread centered under couple
     if (visChildren.length > 0) {
-      const totalChildW = visChildren.reduce((s, c) => s + (subtreeWidths.get(c) || NODE_WIDTH), 0)
-        + (visChildren.length - 1) * SIBLING_GAP;
+      const totalChildW =
+        visChildren.reduce((s, c) => s + (subtreeWidths.get(c) || NODE_WIDTH), 0) +
+        (visChildren.length - 1) * SIBLING_GAP;
       let childX = centerX - totalChildW / 2;
       for (const child of visChildren) {
         assignPositions(child, childX);
@@ -460,7 +463,7 @@ function buildTreeLayout(
     rootStartX += (subtreeWidths.get(root) || NODE_WIDTH) + SIBLING_GAP * 2;
   }
 
-  const minGen = Math.min(...visiblePeople.map((p) => p.generation || 1));
+  const minGen = Math.min(...visiblePeople.map(p => p.generation || 1));
   const nodes: TreeNodeData[] = [];
   for (const person of visiblePeople) {
     if (!xPositions.has(person.id)) continue;
@@ -476,7 +479,7 @@ function buildTreeLayout(
 
   // Build connections
   const connections: TreeConnectionData[] = [];
-  const personPos = new Map(nodes.map((n) => [n.person.id, { x: n.x, y: n.y }]));
+  const personPos = new Map(nodes.map(n => [n.person.id, { x: n.x, y: n.y }]));
 
   for (const family of families) {
     const fatherPos = family.father_id ? personPos.get(family.father_id) : null;
@@ -507,30 +510,37 @@ function buildTreeLayout(
         ? (fatherPos.x + NODE_WIDTH + motherPos.x) / 2
         : parentPos.x + NODE_WIDTH / 2;
 
-    children.filter((c) => c.family_id === family.id).forEach((child) => {
-      const childPos = personPos.get(child.person_id);
-      if (childPos) {
-        connections.push({
-          id: `child-${family.id}-${child.person_id}`,
-          x1: familyCenterX,
-          y1: parentPos.y + NODE_HEIGHT,
-          x2: childPos.x + NODE_WIDTH / 2,
-          y2: childPos.y,
-          type: 'parent-child',
-          isVisible: true,
-        });
-      }
-    });
+    children
+      .filter(c => c.family_id === family.id)
+      .forEach(child => {
+        const childPos = personPos.get(child.person_id);
+        if (childPos) {
+          connections.push({
+            id: `child-${family.id}-${child.person_id}`,
+            x1: familyCenterX,
+            y1: parentPos.y + NODE_HEIGHT,
+            x2: childPos.x + NODE_WIDTH / 2,
+            y2: childPos.y,
+            type: 'parent-child',
+            isVisible: true,
+          });
+        }
+      });
   }
 
   // Bounds
-  let minX = Infinity, maxX = -Infinity, maxY = 0;
+  let minX = Infinity,
+    maxX = -Infinity,
+    maxY = 0;
   for (const n of nodes) {
     minX = Math.min(minX, n.x);
     maxX = Math.max(maxX, n.x + NODE_WIDTH);
     maxY = Math.max(maxY, n.y + NODE_HEIGHT);
   }
-  if (!isFinite(minX)) { minX = 0; maxX = 0; }
+  if (!isFinite(minX)) {
+    minX = 0;
+    maxX = 0;
+  }
 
   return {
     nodes,
@@ -561,9 +571,7 @@ export function FamilyTree() {
   const [showMinimap, setShowMinimap] = useState(true);
   // Lazy init from ?root= URL param (component is ssr:false so window is always available here)
   const [filterRootId, setFilterRootId] = useState<string | null>(() =>
-    typeof window !== 'undefined'
-      ? new URLSearchParams(window.location.search).get('root')
-      : null
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('root') : null
   );
   const [filterSearch, setFilterSearch] = useState('');
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -576,12 +584,16 @@ export function FamilyTree() {
       const params = new URLSearchParams(window.location.search);
       if (person) params.set('root', person.id);
       else params.delete('root');
-      window.history.replaceState(null, '', params.toString() ? `?${params.toString()}` : window.location.pathname);
+      window.history.replaceState(
+        null,
+        '',
+        params.toString() ? `?${params.toString()}` : window.location.pathname
+      );
     }
   }, []);
 
   const filterRootPerson = filterRootId
-    ? data?.people.find((p) => p.id === filterRootId) ?? null
+    ? (data?.people.find(p => p.id === filterRootId) ?? null)
     : null;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -592,7 +604,7 @@ export function FamilyTree() {
     if (node) {
       containerRef.current = node;
       setContainerSize({ width: node.clientWidth, height: node.clientHeight });
-      const observer = new ResizeObserver((entries) => {
+      const observer = new ResizeObserver(entries => {
         for (const entry of entries) {
           setContainerSize({ width: entry.contentRect.width, height: entry.contentRect.height });
         }
@@ -605,19 +617,25 @@ export function FamilyTree() {
   // Layout
   const layout = useMemo(() => {
     if (!data || data.people.length === 0) return null;
-    return buildTreeLayout(data, collapsedNodes, viewMode, selectedPerson?.id || null, filterRootId);
+    return buildTreeLayout(
+      data,
+      collapsedNodes,
+      viewMode,
+      selectedPerson?.id || null,
+      filterRootId
+    );
   }, [data, collapsedNodes, viewMode, selectedPerson?.id, filterRootId]);
 
   // Handlers
-  const handleZoomIn = () => setScale((s) => Math.min(s + 0.1, 2));
-  const handleZoomOut = () => setScale((s) => Math.max(s - 0.1, 0.3));
+  const handleZoomIn = () => setScale(s => Math.min(s + 0.1, 2));
+  const handleZoomOut = () => setScale(s => Math.max(s - 0.1, 0.3));
   const handleReset = () => {
     setScale(1);
     setPan({ x: 0, y: 0 });
   };
 
   const handleToggleCollapse = useCallback((personId: string) => {
-    setCollapsedNodes((prev) => {
+    setCollapsedNodes(prev => {
       const next = new Set(prev);
       if (next.has(personId)) {
         next.delete(personId);
@@ -677,7 +695,7 @@ export function FamilyTree() {
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? -0.05 : 0.05;
-    setScale((s) => Math.max(0.3, Math.min(2, s + delta)));
+    setScale(s => Math.max(0.3, Math.min(2, s + delta)));
   };
 
   // Minimap viewport click
@@ -768,7 +786,7 @@ export function FamilyTree() {
                 type="text"
                 placeholder="Tìm thành viên..."
                 value={filterSearch}
-                onChange={(e) => {
+                onChange={e => {
                   setFilterSearch(e.target.value);
                   setFilterDropdownOpen(e.target.value.length >= 2);
                 }}
@@ -780,12 +798,13 @@ export function FamilyTree() {
             {filterDropdownOpen && data?.people && (
               <div className="absolute z-50 top-full mt-1 bg-background border rounded-md shadow-lg w-64 max-h-48 overflow-y-auto">
                 {data.people
-                  .filter((p) =>
-                    filterSearch.length >= 2 &&
-                    p.display_name.toLowerCase().includes(filterSearch.toLowerCase())
+                  .filter(
+                    p =>
+                      filterSearch.length >= 2 &&
+                      p.display_name.toLowerCase().includes(filterSearch.toLowerCase())
                   )
                   .slice(0, 10)
-                  .map((person) => (
+                  .map(person => (
                     <button
                       key={person.id}
                       onMouseDown={() => handleSetFilterRoot(person)}
@@ -793,7 +812,9 @@ export function FamilyTree() {
                     >
                       <div
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
-                          person.gender === 1 ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
+                          person.gender === 1
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-pink-100 text-pink-700'
                         }`}
                       >
                         {person.display_name.slice(-1)}
@@ -836,7 +857,7 @@ export function FamilyTree() {
         </div>
 
         {/* View mode filter */}
-        <Select value={viewMode} onValueChange={(v) => handleViewModeChange(v as ViewMode)}>
+        <Select value={viewMode} onValueChange={v => handleViewModeChange(v as ViewMode)}>
           <SelectTrigger className="w-40">
             <SelectValue />
           </SelectTrigger>
@@ -884,13 +905,10 @@ export function FamilyTree() {
       {viewMode !== 'all' && selectedPerson && (
         <div className="flex items-center gap-2">
           <Badge variant="secondary">
-            {viewMode === 'ancestors' ? 'Tổ tiên của' : 'Con cháu của'}: {selectedPerson.display_name}
+            {viewMode === 'ancestors' ? 'Tổ tiên của' : 'Con cháu của'}:{' '}
+            {selectedPerson.display_name}
           </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setViewMode('all')}
-          >
+          <Button variant="ghost" size="sm" onClick={() => setViewMode('all')}>
             Xem tất cả
           </Button>
         </div>
@@ -910,23 +928,19 @@ export function FamilyTree() {
         onTouchEnd={handleTouchEnd}
         onWheel={handleWheel}
       >
-        <svg
-          width="100%"
-          height="100%"
-          style={{ minWidth: '100%', minHeight: '100%' }}
-        >
+        <svg width="100%" height="100%" style={{ minWidth: '100%', minHeight: '100%' }}>
           <g transform={`translate(${pan.x}, ${pan.y}) scale(${scale})`}>
             <g transform={`translate(${layout.offsetX}, 0)`}>
               {/* Connections first (behind nodes) */}
               <AnimatePresence>
-                {layout.connections.map((conn) => (
+                {layout.connections.map(conn => (
                   <TreeConnection key={conn.id} connection={conn} />
                 ))}
               </AnimatePresence>
 
               {/* Nodes */}
               <AnimatePresence>
-                {layout.nodes.map((node) => (
+                {layout.nodes.map(node => (
                   <TreeNode
                     key={node.person.id}
                     node={node}
@@ -965,9 +979,7 @@ export function FamilyTree() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={selectedPerson.avatar_url} />
-                    <AvatarFallback>
-                      {selectedPerson.display_name.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarFallback>{selectedPerson.display_name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="font-semibold">{selectedPerson.display_name}</h3>
@@ -1000,9 +1012,7 @@ export function FamilyTree() {
                     </>
                   )}
                   <Button asChild size="sm">
-                    <Link href={`/people/${selectedPerson.id}`}>
-                      Xem chi tiết
-                    </Link>
+                    <Link href={`/people/${selectedPerson.id}`}>Xem chi tiết</Link>
                   </Button>
                 </div>
               </CardContent>

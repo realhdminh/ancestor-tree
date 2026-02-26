@@ -78,7 +78,7 @@ export function useStats() {
 
 export function useCreatePerson() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (input: CreatePersonInput) => createPerson(input),
     onSuccess: () => {
@@ -89,9 +89,9 @@ export function useCreatePerson() {
 
 export function useUpdatePerson() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdatePersonInput }) => 
+    mutationFn: ({ id, input }: { id: string; input: UpdatePersonInput }) =>
       updatePerson(id, input),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: peopleKeys.detail(id) });
@@ -102,7 +102,7 @@ export function useUpdatePerson() {
 
 export function useDeletePerson() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => deletePerson(id),
     onSuccess: () => {

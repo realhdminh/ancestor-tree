@@ -15,7 +15,9 @@ const fetchWithTimeout: typeof fetch = async (input, init) => {
     return await fetch(input, { ...init, signal: controller.signal });
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
-      throw new Error('Yêu cầu hết thời gian chờ. Supabase đang khởi động — vui lòng thử lại sau vài giây.');
+      throw new Error(
+        'Yêu cầu hết thời gian chờ. Supabase đang khởi động — vui lòng thử lại sau vài giây.'
+      );
     }
     throw err;
   } finally {
@@ -26,7 +28,8 @@ const fetchWithTimeout: typeof fetch = async (input, init) => {
 // No-op lock: bypasses Navigator LockManager to avoid 10s lock timeout errors
 // caused by @supabase/ssr holding the Web Lock across hot-reload / multiple tabs.
 // Safe for single-tab apps where concurrent token refreshes are rare.
-const noopLock = async <T>(_name: string, _timeout: number, fn: () => Promise<T>): Promise<T> => fn();
+const noopLock = async <T>(_name: string, _timeout: number, fn: () => Promise<T>): Promise<T> =>
+  fn();
 
 function createSupabaseClient(): SupabaseClient {
   if (isDesktopMode) {

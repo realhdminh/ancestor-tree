@@ -44,9 +44,8 @@ function ArticleCard({ article, index }: { article: ClanArticle; index?: number 
 
 function FeaturedQuote({ article }: { article: ClanArticle }) {
   // Show first 200 chars as a featured quote
-  const excerpt = article.content.length > 200
-    ? article.content.slice(0, 200) + '...'
-    : article.content;
+  const excerpt =
+    article.content.length > 200 ? article.content.slice(0, 200) + '...' : article.content;
 
   return (
     <Card className="border-amber-200 bg-amber-50/50">
@@ -121,7 +120,7 @@ export default function CharterPage() {
 
       <Separator />
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ClanArticleCategory)}>
+      <Tabs value={activeTab} onValueChange={v => setActiveTab(v as ClanArticleCategory)}>
         <TabsList className="w-full">
           {TABS.map(tab => (
             <TabsTrigger key={tab.value} value={tab.value} className="flex-1">

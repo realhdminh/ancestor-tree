@@ -33,7 +33,9 @@ export default function DocumentsPage() {
       const validation = validateGedcom(content);
 
       if (!validation.valid) {
-        toast.warning(`File GEDCOM có ${validation.errors.length} cảnh báo nhưng vẫn có thể sử dụng`);
+        toast.warning(
+          `File GEDCOM có ${validation.errors.length} cảnh báo nhưng vẫn có thể sử dụng`
+        );
       }
 
       downloadGedcom(content);
@@ -71,8 +73,8 @@ export default function DocumentsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              File GEDCOM (.ged) là chuẩn trao đổi dữ liệu phả hệ quốc tế,
-              tương thích với hầu hết phần mềm gia phả như FamilySearch, Gramps, MyHeritage.
+              File GEDCOM (.ged) là chuẩn trao đổi dữ liệu phả hệ quốc tế, tương thích với hầu hết
+              phần mềm gia phả như FamilySearch, Gramps, MyHeritage.
             </p>
 
             {treeData && (
@@ -123,8 +125,8 @@ export default function DocumentsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Trình bày gia phả theo từng đời, từng chi với đầy đủ thông tin
-              thành viên. Hỗ trợ in trực tiếp hoặc lưu PDF.
+              Trình bày gia phả theo từng đời, từng chi với đầy đủ thông tin thành viên. Hỗ trợ in
+              trực tiếp hoặc lưu PDF.
             </p>
             <Button asChild variant="outline" className="w-full">
               <Link href="/documents/book">

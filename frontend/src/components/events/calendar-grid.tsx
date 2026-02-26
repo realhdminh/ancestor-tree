@@ -76,7 +76,10 @@ export function CalendarGrid({ month, year, events, people }: CalendarGridProps)
     <div>
       <div className="grid grid-cols-7 gap-px bg-muted rounded-lg overflow-hidden border">
         {dayNames.map(d => (
-          <div key={d} className="bg-muted-foreground/5 p-2 text-center text-xs font-medium text-muted-foreground">
+          <div
+            key={d}
+            className="bg-muted-foreground/5 p-2 text-center text-xs font-medium text-muted-foreground"
+          >
             {d}
           </div>
         ))}
@@ -94,9 +97,7 @@ export function CalendarGrid({ month, year, events, people }: CalendarGridProps)
           return (
             <div
               key={day}
-              className={`bg-background p-1.5 min-h-[80px] ${
-                isToday ? 'ring-2 ring-primary ring-inset' : ''
-              }`}
+              className={`bg-background p-1.5 min-h-[80px] ${isToday ? 'ring-2 ring-primary ring-inset' : ''}`}
             >
               <div className="flex items-center justify-between mb-1">
                 <span className={`text-sm font-medium ${isToday ? 'text-primary' : ''}`}>

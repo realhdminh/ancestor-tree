@@ -32,18 +32,14 @@ export async function uploadFile(file: File, personId: string): Promise<string> 
   const timestamp = Date.now();
   const path = `people/${personId}/${timestamp}.${ext}`;
 
-  const { error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(path, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
+  const { error } = await supabase.storage.from(BUCKET_NAME).upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+  });
 
   if (error) throw new StorageError(error.message);
 
-  const { data: urlData } = supabase.storage
-    .from(BUCKET_NAME)
-    .getPublicUrl(path);
+  const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path);
 
   return urlData.publicUrl;
 }
@@ -58,9 +54,7 @@ export async function deleteFile(url: string): Promise<void> {
   }
 
   const path = decodeURIComponent(url.slice(idx + bucketUrl.length));
-  const { error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .remove([path]);
+  const { error } = await supabase.storage.from(BUCKET_NAME).remove([path]);
 
   if (error) throw new StorageError(error.message);
 }

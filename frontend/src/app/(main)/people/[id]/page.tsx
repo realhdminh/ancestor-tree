@@ -130,7 +130,11 @@ export default function PersonDetailPage({ params }: PageProps) {
                 <div className="flex gap-2">
                   <Badge variant="outline">Đời {person.generation}</Badge>
                   {person.chi && <Badge variant="outline">Chi {person.chi}</Badge>}
-                  <Badge className={person.is_living ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                  <Badge
+                    className={
+                      person.is_living ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                    }
+                  >
                     {person.is_living ? 'Còn sống' : 'Đã mất'}
                   </Badge>
                   {person.is_patrilineal && (
@@ -141,8 +145,16 @@ export default function PersonDetailPage({ params }: PageProps) {
 
               {(person.pen_name || person.taboo_name) && (
                 <div className="flex gap-4 mt-1 text-sm text-muted-foreground">
-                  {person.taboo_name && <span>Tên húy: <strong>{person.taboo_name}</strong></span>}
-                  {person.pen_name && <span>Tên tự: <strong>{person.pen_name}</strong></span>}
+                  {person.taboo_name && (
+                    <span>
+                      Tên húy: <strong>{person.taboo_name}</strong>
+                    </span>
+                  )}
+                  {person.pen_name && (
+                    <span>
+                      Tên tự: <strong>{person.pen_name}</strong>
+                    </span>
+                  )}
                 </div>
               )}
 
@@ -172,7 +184,8 @@ export default function PersonDetailPage({ params }: PageProps) {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Bạn có chắc muốn xóa {person.display_name}? Hành động này không thể hoàn tác.
+                          Bạn có chắc muốn xóa {person.display_name}? Hành động này không thể hoàn
+                          tác.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -285,7 +298,12 @@ export default function PersonDetailPage({ params }: PageProps) {
             {person.facebook && (
               <div className="flex items-center gap-2">
                 <Facebook className="h-4 w-4 text-muted-foreground" />
-                <a href={person.facebook} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a
+                  href={person.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
                   Facebook
                 </a>
               </div>
@@ -296,9 +314,11 @@ export default function PersonDetailPage({ params }: PageProps) {
                 <span>{person.address}</span>
               </div>
             )}
-            {!person.phone && !person.email && !person.zalo && !person.facebook && !person.address && (
-              <p className="text-muted-foreground">Chưa có thông tin liên hệ</p>
-            )}
+            {!person.phone &&
+              !person.email &&
+              !person.zalo &&
+              !person.facebook &&
+              !person.address && <p className="text-muted-foreground">Chưa có thông tin liên hệ</p>}
           </CardContent>
         </Card>
       </div>

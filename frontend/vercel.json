@@ -4,6 +4,12 @@
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
   "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/health",
+      "schedule": "0 8 */5 * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

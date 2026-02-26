@@ -13,23 +13,15 @@ import type { Database } from 'sql.js';
  * Check if target_id is in the subtree rooted at root_id.
  * Uses iterative DFS through families/children tables.
  */
-function isPersonInSubtree(
-  db: Database,
-  rootId: string,
-  targetId: string,
-): boolean {
+function isPersonInSubtree(db: Database, rootId: string, targetId: string): boolean {
   if (rootId === targetId) return true;
 
   // BFS through family tree using parameterized queries
   const visited = new Set<string>();
   const queue = [rootId];
 
-  const familyStmt = db.prepare(
-    'SELECT id FROM families WHERE father_id = ? OR mother_id = ?'
-  );
-  const childStmt = db.prepare(
-    'SELECT person_id FROM children WHERE family_id = ?'
-  );
+  const familyStmt = db.prepare('SELECT id FROM families WHERE father_id = ? OR mother_id = ?');
+  const childStmt = db.prepare('SELECT person_id FROM children WHERE family_id = ?');
 
   try {
     while (queue.length > 0) {
@@ -75,7 +67,7 @@ export interface RpcResult {
 export function handleRpc(
   db: Database,
   functionName: string,
-  params: Record<string, unknown>,
+  params: Record<string, unknown>
 ): RpcResult {
   switch (functionName) {
     case 'is_person_in_subtree': {

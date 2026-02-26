@@ -10,16 +10,16 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { usePersonMedia, useUploadMedia, useDeleteMedia, useSetPrimaryMedia } from '@/hooks/use-media';
+import {
+  usePersonMedia,
+  useUploadMedia,
+  useDeleteMedia,
+  useSetPrimaryMedia,
+} from '@/hooks/use-media';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -143,7 +143,7 @@ export function PhotoGallery({ personId, canEdit }: PhotoGalleryProps) {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {photos.map((photo) => (
+              {photos.map(photo => (
                 <div
                   key={photo.id}
                   className="relative group aspect-square rounded-lg overflow-hidden cursor-pointer border"

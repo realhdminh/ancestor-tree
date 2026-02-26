@@ -32,7 +32,7 @@ const JSON_COLUMNS: Record<string, Set<string>> = {
 /** Convert a row from SQLite types to PostgreSQL-like types */
 export function coerceRowFromSqlite(
   table: string,
-  row: Record<string, unknown>,
+  row: Record<string, unknown>
 ): Record<string, unknown> {
   const boolCols = BOOLEAN_COLUMNS[table];
   const jsonCols = JSON_COLUMNS[table];
@@ -57,7 +57,7 @@ export function coerceRowFromSqlite(
 /** Convert input data from PostgreSQL-like types to SQLite types */
 export function coerceDataToSqlite(
   table: string,
-  data: Record<string, unknown>,
+  data: Record<string, unknown>
 ): Record<string, unknown> {
   const boolCols = BOOLEAN_COLUMNS[table];
   const jsonCols = JSON_COLUMNS[table];

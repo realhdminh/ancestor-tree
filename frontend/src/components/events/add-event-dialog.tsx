@@ -55,7 +55,10 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
 
   const validateLunar = (value: string) => {
     setEventLunar(value);
-    if (!value) { setLunarError(''); return; }
+    if (!value) {
+      setLunarError('');
+      return;
+    }
     setLunarError(parseLunarString(value) ? '' : 'Sai định dạng. VD: 15/7 (ngày/tháng)');
   };
 
@@ -80,7 +83,10 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) { toast.error('Vui lòng nhập tiêu đề'); return; }
+    if (!title.trim()) {
+      toast.error('Vui lòng nhập tiêu đề');
+      return;
+    }
     if (eventLunar && !parseLunarString(eventLunar)) {
       toast.error('Ngày âm lịch không hợp lệ');
       return;
@@ -113,7 +119,9 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
           </SelectTrigger>
           <SelectContent>
             {Object.entries(EVENT_TYPE_LABELS).map(([key, { label }]) => (
-              <SelectItem key={key} value={key}>{label}</SelectItem>
+              <SelectItem key={key} value={key}>
+                {label}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -124,18 +132,30 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
           <Label>Người được giỗ</Label>
           {selectedPerson ? (
             <div className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
-                selectedPerson.gender === 1 ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
-              }`}>
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
+                  selectedPerson.gender === 1
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'bg-pink-100 text-pink-700'
+                }`}
+              >
                 {selectedPerson.display_name.slice(-1)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{selectedPerson.display_name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {selectedPerson.death_lunar ? `Giỗ ${selectedPerson.death_lunar} ÂL` : `Đời ${selectedPerson.generation}`}
+                  {selectedPerson.death_lunar
+                    ? `Giỗ ${selectedPerson.death_lunar} ÂL`
+                    : `Đời ${selectedPerson.generation}`}
                 </p>
               </div>
-              <Button variant="ghost" size="sm" type="button" className="h-7 w-7 p-0 shrink-0" onClick={handleClearPerson}>
+              <Button
+                variant="ghost"
+                size="sm"
+                type="button"
+                className="h-7 w-7 p-0 shrink-0"
+                onClick={handleClearPerson}
+              >
                 <X className="h-3 w-3" />
               </Button>
             </div>
@@ -159,7 +179,9 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
                     <p className="p-3 text-sm text-muted-foreground">Đang tìm...</p>
                   ) : filteredResults.length === 0 ? (
                     <p className="p-3 text-sm text-muted-foreground">
-                      {personQuery.length >= 2 ? 'Không tìm thấy thành viên đã mất' : 'Gõ tối thiểu 2 ký tự'}
+                      {personQuery.length >= 2
+                        ? 'Không tìm thấy thành viên đã mất'
+                        : 'Gõ tối thiểu 2 ký tự'}
                     </p>
                   ) : (
                     filteredResults.map(person => (
@@ -172,15 +194,20 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
                           handleSelectPerson(person);
                         }}
                       >
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
-                          person.gender === 1 ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
-                        }`}>
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
+                            person.gender === 1
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-pink-100 text-pink-700'
+                          }`}
+                        >
                           {person.display_name.slice(-1)}
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-medium truncate">{person.display_name}</p>
                           <p className="text-xs text-muted-foreground">
-                            Đời {person.generation}{person.death_lunar ? ` · Giỗ ${person.death_lunar} ÂL` : ''}
+                            Đời {person.generation}
+                            {person.death_lunar ? ` · Giỗ ${person.death_lunar} ÂL` : ''}
                           </p>
                         </div>
                       </button>
@@ -254,11 +281,15 @@ export function AddEventDialog({ onClose }: AddEventDialogProps) {
           onChange={e => setRecurring(e.target.checked)}
           className="rounded border-gray-300"
         />
-        <Label htmlFor="recurring" className="font-normal">Lặp lại hàng năm</Label>
+        <Label htmlFor="recurring" className="font-normal">
+          Lặp lại hàng năm
+        </Label>
       </div>
 
       <DialogFooter>
-        <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+        <Button type="button" variant="outline" onClick={onClose}>
+          Hủy
+        </Button>
         <Button type="submit" disabled={createEvent.isPending}>
           {createEvent.isPending ? 'Đang lưu...' : 'Thêm sự kiện'}
         </Button>

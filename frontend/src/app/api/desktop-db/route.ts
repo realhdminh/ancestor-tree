@@ -15,8 +15,7 @@ import { handleRpc } from './rpc-handlers';
 
 /** Guard: only allow in desktop mode */
 function isDesktopMode(): boolean {
-  return process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true' ||
-    process.env.DESKTOP_MODE === 'true';
+  return process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true' || process.env.DESKTOP_MODE === 'true';
 }
 
 export async function POST(request: NextRequest) {

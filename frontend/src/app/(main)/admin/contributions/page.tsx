@@ -26,14 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  ClipboardList,
-  CheckCircle2,
-  XCircle,
-  ArrowLeft,
-  User,
-  FileEdit,
-} from 'lucide-react';
+import { ClipboardList, CheckCircle2, XCircle, ArrowLeft, User, FileEdit } from 'lucide-react';
 import type { ContributionStatus, ChangeType } from '@/types';
 import { toast } from 'sonner';
 
@@ -89,9 +82,8 @@ export default function AdminContributionsPage() {
     );
   }
 
-  const filteredContributions = contributions?.filter(c =>
-    statusFilter === 'all' ? true : c.status === statusFilter
-  ) || [];
+  const filteredContributions =
+    contributions?.filter(c => (statusFilter === 'all' ? true : c.status === statusFilter)) || [];
 
   const pendingCount = contributions?.filter(c => c.status === 'pending').length || 0;
 
@@ -130,7 +122,9 @@ export default function AdminContributionsPage() {
           <div>
             <h1 className="text-2xl font-bold">Duyệt đề xuất chỉnh sửa</h1>
             <p className="text-muted-foreground">
-              {pendingCount > 0 ? `${pendingCount} đề xuất đang chờ duyệt` : 'Không có đề xuất chờ duyệt'}
+              {pendingCount > 0
+                ? `${pendingCount} đề xuất đang chờ duyệt`
+                : 'Không có đề xuất chờ duyệt'}
             </p>
           </div>
         </div>
@@ -162,9 +156,7 @@ export default function AdminContributionsPage() {
       ) : filteredContributions.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            {statusFilter === 'pending'
-              ? 'Không có đề xuất chờ duyệt'
-              : 'Không có đề xuất nào'}
+            {statusFilter === 'pending' ? 'Không có đề xuất chờ duyệt' : 'Không có đề xuất nào'}
           </CardContent>
         </Card>
       ) : (
@@ -183,13 +175,17 @@ export default function AdminContributionsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
                       <Badge
-                        variant={c.status === 'pending' ? 'default' : c.status === 'approved' ? 'secondary' : 'destructive'}
+                        variant={
+                          c.status === 'pending'
+                            ? 'default'
+                            : c.status === 'approved'
+                              ? 'secondary'
+                              : 'destructive'
+                        }
                       >
                         {statusInfo.label}
                       </Badge>
-                      <Badge variant="outline">
-                        {CHANGE_TYPE_LABELS[c.change_type]}
-                      </Badge>
+                      <Badge variant="outline">{CHANGE_TYPE_LABELS[c.change_type]}</Badge>
                     </div>
                     <span className="text-xs text-muted-foreground">
                       {new Date(c.created_at).toLocaleDateString('vi-VN', {
@@ -234,7 +230,8 @@ export default function AdminContributionsPage() {
                           </span>
                           {person && key in person && (
                             <span className="text-muted-foreground text-xs">
-                              (hiện tại: {String((person as unknown as Record<string, string>)[key])})
+                              (hiện tại:{' '}
+                              {String((person as unknown as Record<string, string>)[key])})
                             </span>
                           )}
                         </div>
@@ -255,7 +252,9 @@ export default function AdminContributionsPage() {
                       <Textarea
                         placeholder="Ghi chú duyệt (tùy chọn)..."
                         value={reviewNotes[c.id] || ''}
-                        onChange={e => setReviewNotes(prev => ({ ...prev, [c.id]: e.target.value }))}
+                        onChange={e =>
+                          setReviewNotes(prev => ({ ...prev, [c.id]: e.target.value }))
+                        }
                         rows={2}
                       />
                       <div className="flex gap-2">

@@ -26,7 +26,9 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     // Listen for PASSWORD_RECOVERY event from Supabase reset link
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(event => {
       if (event === 'PASSWORD_RECOVERY') {
         setIsReady(true);
       }
@@ -72,7 +74,7 @@ export default function ResetPasswordPage() {
 
   if (!isReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 to-emerald-100 p-4">
         <Card className="w-full max-w-md">
           <CardContent className="py-12 text-center text-muted-foreground">
             Đang xác thực link đặt lại mật khẩu...
@@ -83,16 +85,14 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 to-emerald-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-4">
             Đ
           </div>
           <CardTitle>Đặt lại mật khẩu</CardTitle>
-          <CardDescription>
-            Nhập mật khẩu mới cho tài khoản của bạn
-          </CardDescription>
+          <CardDescription>Nhập mật khẩu mới cho tài khoản của bạn</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
               />
             </div>
@@ -114,7 +114,7 @@ export default function ResetPasswordPage() {
                 type="password"
                 placeholder="••••••••"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 required
               />
             </div>

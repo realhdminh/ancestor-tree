@@ -40,9 +40,7 @@ export default function AdminPage() {
             <Shield className="h-6 w-6" />
             Quản trị hệ thống
           </h1>
-          <p className="text-muted-foreground">
-            Tổng quan và quản lý dữ liệu gia phả
-          </p>
+          <p className="text-muted-foreground">Tổng quan và quản lý dữ liệu gia phả</p>
         </div>
         <Button asChild>
           <Link href="/admin/settings">

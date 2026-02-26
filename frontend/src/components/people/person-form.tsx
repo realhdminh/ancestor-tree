@@ -17,7 +17,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Form,
   FormControl,
@@ -38,42 +44,50 @@ interface PersonFormProps {
   isLoading?: boolean;
 }
 
-export function PersonForm({ person, defaultValues: extraDefaults, lockedGeneration, onSubmit, isLoading }: PersonFormProps) {
+export function PersonForm({
+  person,
+  defaultValues: extraDefaults,
+  lockedGeneration,
+  onSubmit,
+  isLoading,
+}: PersonFormProps) {
   const form = useForm<PersonFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(personSchema) as any,
-    defaultValues: person ? {
-      handle: person.handle,
-      display_name: person.display_name,
-      first_name: person.first_name || '',
-      middle_name: person.middle_name || '',
-      surname: person.surname || '',
-      pen_name: person.pen_name || '',
-      taboo_name: person.taboo_name || '',
-      gender: person.gender,
-      generation: person.generation,
-      chi: person.chi || undefined,
-      birth_date: person.birth_date || '',
-      birth_year: person.birth_year || undefined,
-      birth_place: person.birth_place || '',
-      death_date: person.death_date || '',
-      death_year: person.death_year || undefined,
-      death_place: person.death_place || '',
-      death_lunar: person.death_lunar || '',
-      is_living: person.is_living,
-      is_patrilineal: person.is_patrilineal,
-      phone: person.phone || '',
-      email: person.email || '',
-      zalo: person.zalo || '',
-      facebook: person.facebook || '',
-      address: person.address || '',
-      hometown: person.hometown || '',
-      occupation: person.occupation || '',
-      biography: person.biography || '',
-      notes: person.notes || '',
-      avatar_url: person.avatar_url || '',
-      privacy_level: person.privacy_level,
-    } : { ...defaultPersonValues, ...extraDefaults },
+    defaultValues: person
+      ? {
+          handle: person.handle,
+          display_name: person.display_name,
+          first_name: person.first_name || '',
+          middle_name: person.middle_name || '',
+          surname: person.surname || '',
+          pen_name: person.pen_name || '',
+          taboo_name: person.taboo_name || '',
+          gender: person.gender,
+          generation: person.generation,
+          chi: person.chi || undefined,
+          birth_date: person.birth_date || '',
+          birth_year: person.birth_year || undefined,
+          birth_place: person.birth_place || '',
+          death_date: person.death_date || '',
+          death_year: person.death_year || undefined,
+          death_place: person.death_place || '',
+          death_lunar: person.death_lunar || '',
+          is_living: person.is_living,
+          is_patrilineal: person.is_patrilineal,
+          phone: person.phone || '',
+          email: person.email || '',
+          zalo: person.zalo || '',
+          facebook: person.facebook || '',
+          address: person.address || '',
+          hometown: person.hometown || '',
+          occupation: person.occupation || '',
+          biography: person.biography || '',
+          notes: person.notes || '',
+          avatar_url: person.avatar_url || '',
+          privacy_level: person.privacy_level,
+        }
+      : { ...defaultPersonValues, ...extraDefaults },
   });
 
   const isLiving = form.watch('is_living');
@@ -108,7 +122,7 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="handle"
@@ -205,7 +219,10 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Giới tính *</FormLabel>
-                    <Select onValueChange={(v) => field.onChange(parseInt(v) as 1 | 2)} defaultValue={field.value?.toString()}>
+                    <Select
+                      onValueChange={v => field.onChange(parseInt(v) as 1 | 2)}
+                      defaultValue={field.value?.toString()}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Chọn" />
@@ -234,7 +251,9 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                         max={20}
                         {...field}
                         disabled={lockedGeneration !== undefined}
-                        className={lockedGeneration !== undefined ? 'bg-muted text-muted-foreground' : ''}
+                        className={
+                          lockedGeneration !== undefined ? 'bg-muted text-muted-foreground' : ''
+                        }
                       />
                     </FormControl>
                     {lockedGeneration !== undefined && (
@@ -254,13 +273,15 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                   <FormItem>
                     <FormLabel>Chi</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        min={1} 
-                        max={10} 
-                        {...field} 
-                        value={field.value ?? ''} 
-                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                      <Input
+                        type="number"
+                        min={1}
+                        max={10}
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={e =>
+                          field.onChange(e.target.value ? parseInt(e.target.value) : undefined)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -305,7 +326,7 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="is_patrilineal"
@@ -336,12 +357,14 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                   <FormItem>
                     <FormLabel>Năm sinh</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        placeholder="1990" 
+                      <Input
+                        type="number"
+                        placeholder="1990"
                         {...field}
                         value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                        onChange={e =>
+                          field.onChange(e.target.value ? parseInt(e.target.value) : undefined)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -385,12 +408,14 @@ export function PersonForm({ person, defaultValues: extraDefaults, lockedGenerat
                     <FormItem>
                       <FormLabel>Năm mất</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="2020" 
+                        <Input
+                          type="number"
+                          placeholder="2020"
                           {...field}
                           value={field.value ?? ''}
-                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                          onChange={e =>
+                            field.onChange(e.target.value ? parseInt(e.target.value) : undefined)
+                          }
                         />
                       </FormControl>
                       <FormMessage />

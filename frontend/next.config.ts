@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // ADR-004: env-conditional standalone output for Electron desktop builds.
@@ -8,9 +8,11 @@ const nextConfig: NextConfig = {
 
   // Ensure sql.js WASM binary is included in standalone output file tracing.
   // Without this, Next.js tree-shaking may exclude the .wasm file.
-  outputFileTracingIncludes: process.env.ELECTRON_BUILD ? {
-    '/api/desktop-db': ['./node_modules/sql.js/dist/sql-wasm.wasm'],
-  } : undefined,
+  outputFileTracingIncludes: process.env.ELECTRON_BUILD
+    ? {
+        '/api/desktop-db': ['./node_modules/sql.js/dist/sql-wasm.wasm'],
+      }
+    : undefined,
 };
 
 export default nextConfig;

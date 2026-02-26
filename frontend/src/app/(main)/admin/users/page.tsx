@@ -9,7 +9,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useProfiles, useUpdateUserRole, useUpdateLinkedPerson, useUpdateEditRootPerson } from '@/hooks/use-profiles';
+import {
+  useProfiles,
+  useUpdateUserRole,
+  useUpdateLinkedPerson,
+  useUpdateEditRootPerson,
+} from '@/hooks/use-profiles';
 import { useSearchPeople, usePerson } from '@/hooks/use-people';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,7 +108,7 @@ function PersonCombobox({ label, hint, selected, onSelect, excludeId }: PersonCo
   const [open, setOpen] = useState(false);
   const { data: results, isFetching } = useSearchPeople(query);
 
-  const filtered = (results || []).filter((p) => p.id !== excludeId);
+  const filtered = (results || []).filter(p => p.id !== excludeId);
 
   return (
     <div className="space-y-1.5">
@@ -122,7 +127,12 @@ function PersonCombobox({ label, hint, selected, onSelect, excludeId }: PersonCo
             <p className="text-sm font-medium truncate">{selected.display_name}</p>
             <p className="text-xs text-muted-foreground">Đời {selected.generation}</p>
           </div>
-          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 shrink-0" onClick={() => onSelect(null)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 shrink-0"
+            onClick={() => onSelect(null)}
+          >
             <X className="h-3 w-3" />
           </Button>
         </div>
@@ -132,7 +142,7 @@ function PersonCombobox({ label, hint, selected, onSelect, excludeId }: PersonCo
           <Input
             placeholder={`Tìm ${label.toLowerCase()}...`}
             value={query}
-            onChange={(e) => {
+            onChange={e => {
               setQuery(e.target.value);
               setOpen(e.target.value.length > 0);
             }}
@@ -147,12 +157,12 @@ function PersonCombobox({ label, hint, selected, onSelect, excludeId }: PersonCo
               ) : filtered.length === 0 ? (
                 <p className="p-3 text-sm text-muted-foreground">Không tìm thấy</p>
               ) : (
-                filtered.map((person) => (
+                filtered.map(person => (
                   <button
                     key={person.id}
                     type="button"
                     className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-accent transition-colors"
-                    onMouseDown={(e) => {
+                    onMouseDown={e => {
                       e.preventDefault();
                       onSelect(person);
                       setQuery('');
@@ -161,7 +171,9 @@ function PersonCombobox({ label, hint, selected, onSelect, excludeId }: PersonCo
                   >
                     <div
                       className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
-                        person.gender === 1 ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
+                        person.gender === 1
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-pink-100 text-pink-700'
                       }`}
                     >
                       {person.display_name.slice(-1)}
@@ -241,7 +253,12 @@ function TreeMappingDialog({ user, open, onOpenChange }: TreeMappingDialogProps)
   const isSaving = updateLinked.isPending || updateEditRoot.isPending;
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={o => {
+        if (!o) handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -249,8 +266,8 @@ function TreeMappingDialog({ user, open, onOpenChange }: TreeMappingDialogProps)
             Gắn vào cây gia phả
           </DialogTitle>
           <DialogDescription>
-            <strong>{user.full_name || user.email}</strong>
-            {' '}— Liên kết tài khoản với thành viên trong cây.
+            <strong>{user.full_name || user.email}</strong> — Liên kết tài khoản với thành viên
+            trong cây.
           </DialogDescription>
         </DialogHeader>
 
@@ -273,8 +290,8 @@ function TreeMappingDialog({ user, open, onOpenChange }: TreeMappingDialogProps)
 
           {user.role !== 'editor' && (
             <p className="text-xs text-muted-foreground bg-muted rounded-md p-3">
-              Phạm vi sửa chỉ áp dụng cho vai trò <strong>Biên tập viên</strong>.
-              Hiện tại người dùng này là <strong>{roleLabels[user.role].label}</strong>.
+              Phạm vi sửa chỉ áp dụng cho vai trò <strong>Biên tập viên</strong>. Hiện tại người
+              dùng này là <strong>{roleLabels[user.role].label}</strong>.
             </p>
           )}
         </div>
@@ -318,7 +335,12 @@ export default function UsersPage() {
 
   const [mappingUser, setMappingUser] = useState<Profile | null>(null);
 
-  const handleRoleChange = (userId: string, newRole: UserRole, currentRole: UserRole, userName: string) => {
+  const handleRoleChange = (
+    userId: string,
+    newRole: UserRole,
+    currentRole: UserRole,
+    userName: string
+  ) => {
     if (newRole === currentRole) return;
     setConfirmDialog({ open: true, userId, currentRole, newRole, userName });
   };
@@ -337,7 +359,11 @@ export default function UsersPage() {
   };
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    new Date(dateStr).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -370,12 +396,14 @@ export default function UsersPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {(Object.entries(roleLabels) as [UserRole, typeof roleLabels[UserRole]][]).map(([role, info]) => (
-              <div key={role} className="flex items-start gap-3 p-3 rounded-lg border">
-                <Badge className={info.color}>{info.label}</Badge>
-                <span className="text-sm text-muted-foreground">{info.description}</span>
-              </div>
-            ))}
+            {(Object.entries(roleLabels) as [UserRole, (typeof roleLabels)[UserRole]][]).map(
+              ([role, info]) => (
+                <div key={role} className="flex items-start gap-3 p-3 rounded-lg border">
+                  <Badge className={info.color}>{info.label}</Badge>
+                  <span className="text-sm text-muted-foreground">{info.description}</span>
+                </div>
+              )
+            )}
           </div>
         </CardContent>
       </Card>
@@ -394,7 +422,7 @@ export default function UsersPage() {
         <CardContent>
           {isLoading ? (
             <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <div key={i} className="flex items-center gap-4">
                   <Skeleton className="h-10 w-10 rounded-full" />
                   <div className="space-y-2 flex-1">
@@ -425,7 +453,7 @@ export default function UsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {profiles.map((user) => (
+                {profiles.map(user => (
                   <TableRow key={user.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -466,7 +494,9 @@ export default function UsersPage() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{formatDate(user.created_at)}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {formatDate(user.created_at)}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
                         {/* Tree mapping button */}
@@ -482,12 +512,12 @@ export default function UsersPage() {
                         {/* Role selector */}
                         <Select
                           value={user.role}
-                          onValueChange={(value) =>
+                          onValueChange={value =>
                             handleRoleChange(
                               user.user_id,
                               value as UserRole,
                               user.role,
-                              user.full_name || user.email,
+                              user.full_name || user.email
                             )
                           }
                         >
@@ -531,7 +561,10 @@ export default function UsersPage() {
       </Card>
 
       {/* Confirm role change dialog */}
-      <AlertDialog open={confirmDialog?.open} onOpenChange={(open) => !open && setConfirmDialog(null)}>
+      <AlertDialog
+        open={confirmDialog?.open}
+        onOpenChange={open => !open && setConfirmDialog(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Xác nhận thay đổi quyền</AlertDialogTitle>
@@ -571,7 +604,9 @@ export default function UsersPage() {
         <TreeMappingDialog
           user={mappingUser}
           open={!!mappingUser}
-          onOpenChange={(open) => { if (!open) setMappingUser(null); }}
+          onOpenChange={open => {
+            if (!open) setMappingUser(null);
+          }}
         />
       )}
     </div>

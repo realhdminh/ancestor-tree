@@ -19,7 +19,11 @@ import {
   updateScholarshipStatus,
   deleteScholarship,
 } from '@/lib/supabase-data-fund';
-import type { CreateFundTransactionInput, CreateScholarshipInput, ScholarshipStatus } from '@/types';
+import type {
+  CreateFundTransactionInput,
+  CreateScholarshipInput,
+  ScholarshipStatus,
+} from '@/types';
 
 export const fundKeys = {
   all: ['fund'] as const,
@@ -89,8 +93,15 @@ export function useCreateScholarship() {
 export function useUpdateScholarshipStatus() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status, approvedBy }: { id: string; status: ScholarshipStatus; approvedBy?: string }) =>
-      updateScholarshipStatus(id, status, approvedBy),
+    mutationFn: ({
+      id,
+      status,
+      approvedBy,
+    }: {
+      id: string;
+      status: ScholarshipStatus;
+      approvedBy?: string;
+    }) => updateScholarshipStatus(id, status, approvedBy),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fundKeys.all });
     },

@@ -50,6 +50,7 @@ import {
   FileArchive,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/auth-provider';
+import { siteConfig } from '@/lib/site-config';
 
 const mainNavItems = [
   { title: 'Trang chủ', url: '/', icon: Home },
@@ -68,13 +69,23 @@ const mainNavItems = [
 const adminNavItems = [
   { title: 'Bảng điều khiển', url: '/admin', icon: Settings },
   { title: 'Người dùng', url: '/admin/users', icon: UserCog },
-  { title: 'Đề xuất chỉnh sửa', url: '/admin/contributions', icon: ClipboardList },
+  {
+    title: 'Đề xuất chỉnh sửa',
+    url: '/admin/contributions',
+    icon: ClipboardList,
+  },
   { title: 'QL Vinh danh', url: '/admin/achievements', icon: Trophy },
   { title: 'QL Quỹ & Học bổng', url: '/admin/fund', icon: BookOpen },
   { title: 'QL Hương ước', url: '/admin/charter', icon: ScrollText },
   { title: 'QL Cầu đương', url: '/admin/cau-duong', icon: RotateCcw },
   ...(process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true'
-    ? [{ title: 'Xuất / Nhập dữ liệu', url: '/admin/import-export', icon: FileArchive }]
+    ? [
+        {
+          title: 'Xuất / Nhập dữ liệu',
+          url: '/admin/import-export',
+          icon: FileArchive,
+        },
+      ]
     : []),
 ];
 
@@ -84,7 +95,12 @@ export function AppSidebar() {
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
-    return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   return (
@@ -92,11 +108,11 @@ export function AppSidebar() {
       <SidebarHeader className="border-b px-4 py-4">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg">
-            Đ
+            {siteConfig.avatarLetter}
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-sm">Họ Đặng</span>
-            <span className="text-xs text-muted-foreground">làng Kỷ Các</span>
+            <span className="font-semibold text-sm">{siteConfig.clanName}</span>
+            <span className="text-xs text-muted-foreground">{siteConfig.clanLocation}</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -106,9 +122,12 @@ export function AppSidebar() {
           <SidebarGroupLabel>Menu chính</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map((item) => (
+              {mainNavItems.map(item => (
                 <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={item.url === '/' ? pathname === '/' : pathname.startsWith(item.url)}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={item.url === '/' ? pathname === '/' : pathname.startsWith(item.url)}
+                  >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -125,9 +144,16 @@ export function AppSidebar() {
             <SidebarGroupLabel>Quản trị</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {adminNavItems.map((item) => (
+                {adminNavItems.map(item => (
                   <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild isActive={item.url === '/admin' ? pathname === '/admin' : pathname.startsWith(item.url)}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={
+                        item.url === '/admin'
+                          ? pathname === '/admin'
+                          : pathname.startsWith(item.url)
+                      }
+                    >
                       <Link href={item.url}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
@@ -154,7 +180,9 @@ export function AppSidebar() {
                     </Avatar>
                     <div className="flex flex-col items-start text-sm">
                       <span className="font-medium">{profile?.full_name || user?.email}</span>
-                      <span className="text-xs text-muted-foreground capitalize">{profile?.role || 'viewer'}</span>
+                      <span className="text-xs text-muted-foreground capitalize">
+                        {profile?.role || 'viewer'}
+                      </span>
                     </div>
                     <ChevronUp className="ml-auto h-4 w-4" />
                   </SidebarMenuButton>

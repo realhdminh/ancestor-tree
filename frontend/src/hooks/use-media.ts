@@ -35,7 +35,11 @@ export function useUploadMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ file, personId, caption }: {
+    mutationFn: async ({
+      file,
+      personId,
+      caption,
+    }: {
       file: File;
       personId: string;
       caption?: string;
@@ -51,7 +55,7 @@ export function useUploadMedia() {
       };
       return createMedia(input);
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: mediaKeys.byPerson(data.person_id) });
     },
   });
@@ -61,17 +65,13 @@ export function useDeleteMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, url, personId }: {
-      id: string;
-      url: string;
-      personId: string;
-    }) => {
+    mutationFn: async ({ id, url, personId }: { id: string; url: string; personId: string }) => {
       // Delete DB record first to avoid orphaned records if storage delete fails
       await deleteMediaRecord(id);
       await deleteFile(url);
       return personId;
     },
-    onSuccess: (personId) => {
+    onSuccess: personId => {
       queryClient.invalidateQueries({ queryKey: mediaKeys.byPerson(personId) });
     },
   });

@@ -71,10 +71,9 @@ export function useTreeData() {
 
 export function useCreateFamily() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: (input: Omit<Family, 'id' | 'created_at' | 'updated_at'>) => 
-      createFamily(input),
+    mutationFn: (input: Omit<Family, 'id' | 'created_at' | 'updated_at'>) => createFamily(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: familyKeys.all });
       queryClient.invalidateQueries({ queryKey: familyKeys.tree() });
@@ -84,11 +83,15 @@ export function useCreateFamily() {
 
 export function useAddChildToFamily() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ familyId, personId, sortOrder }: { 
-      familyId: string; 
-      personId: string; 
+    mutationFn: ({
+      familyId,
+      personId,
+      sortOrder,
+    }: {
+      familyId: string;
+      personId: string;
       sortOrder: number;
     }) => addChildToFamily(familyId, personId, sortOrder),
     onSuccess: (_, { familyId }) => {

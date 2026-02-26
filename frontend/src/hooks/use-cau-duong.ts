@@ -25,11 +25,7 @@ import {
   rescheduleCauDuong,
   completeCauDuong,
 } from '@/lib/supabase-data-cau-duong';
-import type {
-  CauDuongPool,
-  CauDuongAssignment,
-  CauDuongCeremonyType,
-} from '@/types';
+import type { CauDuongPool, CauDuongAssignment, CauDuongCeremonyType } from '@/types';
 
 // ─── Query keys ───────────────────────────────────────────────────────────────
 
@@ -41,8 +37,7 @@ export const cauDuongKeys = {
     [...cauDuongKeys.all, 'assignments', poolId, year] as const,
   eligible: (poolId: string, year: number) =>
     [...cauDuongKeys.all, 'eligible', poolId, year] as const,
-  nextHost: (poolId: string) =>
-    [...cauDuongKeys.all, 'next_host', poolId] as const,
+  nextHost: (poolId: string) => [...cauDuongKeys.all, 'next_host', poolId] as const,
 };
 
 // ─── Pools ────────────────────────────────────────────────────────────────────
@@ -78,8 +73,13 @@ export function useCreateCauDuongPool() {
 export function useUpdateCauDuongPool() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: Partial<Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>> }) =>
-      updateCauDuongPool(id, input),
+    mutationFn: ({
+      id,
+      input,
+    }: {
+      id: string;
+      input: Partial<Omit<CauDuongPool, 'id' | 'created_at' | 'updated_at'>>;
+    }) => updateCauDuongPool(id, input),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.pool(id) });
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.pools() });
@@ -103,7 +103,7 @@ export function useCreateCauDuongAssignment() {
   return useMutation({
     mutationFn: (input: Omit<CauDuongAssignment, 'id' | 'created_at' | 'updated_at'>) =>
       createCauDuongAssignment(input),
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.assignments(data.pool_id) });
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.nextHost(data.pool_id) });
     },
@@ -144,7 +144,7 @@ export function useAutoAssignNextCeremony() {
       createdBy: string;
       notes?: string;
     }) => autoAssignNextCeremony(poolId, year, ceremonyType, createdBy, notes),
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.assignments(data.pool_id) });
       queryClient.invalidateQueries({ queryKey: cauDuongKeys.nextHost(data.pool_id) });
     },

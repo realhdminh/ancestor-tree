@@ -61,7 +61,11 @@ export function createDesktopAuth() {
       });
     },
 
-    signUp(_credentials: { email: string; password: string; options?: { data?: Record<string, string> } }) {
+    signUp(_credentials: {
+      email: string;
+      password: string;
+      options?: { data?: Record<string, string> };
+    }) {
       return Promise.resolve({
         data: { user: DESKTOP_USER, session: DESKTOP_SESSION },
         error: null,

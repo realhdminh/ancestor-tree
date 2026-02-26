@@ -70,7 +70,9 @@ export default function EditPersonPage({ params }: PageProps) {
             <Lock className="h-10 w-10 text-orange-400 mx-auto mb-4" />
             <p className="text-orange-700 font-medium mb-2">Cần quyền chỉnh sửa</p>
             <p className="text-muted-foreground text-sm mb-4">
-              {!user ? 'Vui lòng đăng nhập để chỉnh sửa thông tin.' : 'Tài khoản của bạn chưa có quyền admin hoặc editor.'}
+              {!user
+                ? 'Vui lòng đăng nhập để chỉnh sửa thông tin.'
+                : 'Tài khoản của bạn chưa có quyền admin hoặc editor.'}
             </p>
             <div className="flex gap-2 justify-center">
               {!user && (
@@ -123,11 +125,7 @@ export default function EditPersonPage({ params }: PageProps) {
         <h1 className="text-2xl font-bold">Chỉnh sửa: {person.display_name}</h1>
       </div>
 
-      <PersonForm 
-        person={person} 
-        onSubmit={handleSubmit} 
-        isLoading={updateMutation.isPending} 
-      />
+      <PersonForm person={person} onSubmit={handleSubmit} isLoading={updateMutation.isPending} />
     </div>
   );
 }

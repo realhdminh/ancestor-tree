@@ -16,8 +16,7 @@ let SQL: Awaited<ReturnType<typeof initSqlJs>> | null = null;
 async function getSqlJs() {
   if (SQL) return SQL;
   SQL = await initSqlJs({
-    locateFile: () =>
-      path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm'),
+    locateFile: () => path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm'),
   });
   return SQL;
 }
@@ -29,7 +28,7 @@ function loadSchema(): string {
     '..',
     'desktop',
     'migrations',
-    '001-initial-schema.sql',
+    '001-initial-schema.sql'
   );
   return fs.readFileSync(schemaPath, 'utf-8');
 }
@@ -53,15 +52,17 @@ export async function createTestDb(): Promise<Database> {
 export function insertPerson(
   db: Database,
   id: string,
-  opts: { handle?: string; display_name?: string; generation?: number } = {},
+  opts: { handle?: string; display_name?: string; generation?: number } = {}
 ): string {
   const handle = opts.handle ?? id; // use full id as handle to guarantee uniqueness
   const name = opts.display_name ?? `Người ${id.slice(0, 4)}`;
   const gen = opts.generation ?? 1;
-  db.run(
-    `INSERT INTO people (id, handle, display_name, generation) VALUES (?, ?, ?, ?)`,
-    [id, handle, name, gen],
-  );
+  db.run(`INSERT INTO people (id, handle, display_name, generation) VALUES (?, ?, ?, ?)`, [
+    id,
+    handle,
+    name,
+    gen,
+  ]);
   return id;
 }
 
@@ -70,17 +71,23 @@ export function insertFamily(
   db: Database,
   familyId: string,
   fatherId: string | null,
-  motherId: string | null,
+  motherId: string | null
 ): string {
-  db.run(
-    `INSERT INTO families (id, handle, father_id, mother_id) VALUES (?, ?, ?, ?)`,
-    [familyId, familyId, fatherId, motherId],
-  );
+  db.run(`INSERT INTO families (id, handle, father_id, mother_id) VALUES (?, ?, ?, ?)`, [
+    familyId,
+    familyId,
+    fatherId,
+    motherId,
+  ]);
   return familyId;
 }
 
 /** Insert a child->family relationship */
 export function insertChild(db: Database, familyId: string, personId: string): void {
   const childId = `${familyId}-${personId}`.slice(0, 36);
-  db.run(`INSERT INTO children (id, family_id, person_id) VALUES (?, ?, ?)`, [childId, familyId, personId]);
+  db.run(`INSERT INTO children (id, family_id, person_id) VALUES (?, ?, ?)`, [
+    childId,
+    familyId,
+    personId,
+  ]);
 }

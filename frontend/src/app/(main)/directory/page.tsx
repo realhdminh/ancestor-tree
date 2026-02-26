@@ -31,16 +31,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  BookUser,
-  Search,
-  Phone,
-  Mail,
-  MapPin,
-  Lock,
-  EyeOff,
-  ExternalLink,
-} from 'lucide-react';
+import { BookUser, Search, Phone, Mail, MapPin, Lock, EyeOff, ExternalLink } from 'lucide-react';
 import type { Person } from '@/types';
 
 type FilterGender = 'all' | '1' | '2';
@@ -150,7 +141,9 @@ export default function DirectoryPage() {
               <SelectContent>
                 <SelectItem value="all">Tất cả đời</SelectItem>
                 {generations.map(g => (
-                  <SelectItem key={g} value={String(g)}>Đời {g}</SelectItem>
+                  <SelectItem key={g} value={String(g)}>
+                    Đời {g}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -225,7 +218,11 @@ export default function DirectoryPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredPeople.map(person => {
-                    const contact = getContactDisplay(person, isAuthenticated, profile?.linked_person);
+                    const contact = getContactDisplay(
+                      person,
+                      isAuthenticated,
+                      profile?.linked_person
+                    );
                     return (
                       <TableRow key={person.id}>
                         <TableCell>
@@ -303,7 +300,9 @@ export default function DirectoryPage() {
                         <TableCell>
                           <div className="flex gap-2">
                             {person.zalo && (
-                              <Badge variant="secondary" className="text-xs">Zalo</Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                Zalo
+                              </Badge>
                             )}
                             {person.facebook && (
                               <a href={person.facebook} target="_blank" rel="noopener noreferrer">
