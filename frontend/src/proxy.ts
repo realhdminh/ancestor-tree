@@ -1,8 +1,8 @@
 /**
  * @project AncestorTree
- * @file src/middleware.ts
- * @description Auth middleware for protected routes — Next.js 16 convention
- * @version 1.2.0
+ * @file src/proxy.ts
+ * @description Auth proxy for protected routes — Next.js 16 convention (renamed from middleware.ts)
+ * @version 1.3.0
  * @updated 2026-02-26
  */
 
@@ -15,12 +15,20 @@ const publicPaths = ['/login', '/register', '/forgot-password', '/reset-password
 // Unauthenticated requests to these paths are redirected to /login.
 const authRequiredPaths = [
   '/',
-  '/people', '/tree', '/directory', '/events',
-  '/achievements', '/charter', '/cau-duong', '/contributions',
-  '/documents', '/fund', '/admin',
+  '/people',
+  '/tree',
+  '/directory',
+  '/events',
+  '/achievements',
+  '/charter',
+  '/cau-duong',
+  '/contributions',
+  '/documents',
+  '/fund',
+  '/admin',
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Desktop mode: bypass all auth — single-user admin, no Supabase Auth
@@ -41,9 +49,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({
             request: { headers: request.headers },
           });
@@ -70,7 +76,12 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect unauthenticated users from protected pages
-  if (!user && authRequiredPaths.some(path => pathname.startsWith(path))) {
+  // Note: publicPaths must be excluded first — '/' in authRequiredPaths matches everything via startsWith
+  if (
+    !user &&
+    !publicPaths.some(path => pathname.startsWith(path)) &&
+    authRequiredPaths.some(path => pathname.startsWith(path))
+  ) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
@@ -103,7 +114,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };
